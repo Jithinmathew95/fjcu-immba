@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>News | imMBA Fu Jen</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="news">
+  <main id="main">
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="kicker" style="color:var(--gold)">News</p>
+        <h1 data-en>Announcements</h1>
+        <h1 data-zh>最新公告</h1>
+      </div>
+    </header>
+    <section class="section">
+      <div class="wrap">
+        <div data-news-index>
+          <div class="search-row">
+            <input data-news-search type="search" placeholder="Search announcements">
+          </div>
+          <div class="news-list" data-news-list></div>
+        </div>
+        <article class="prose hidden" data-news-detail></article>
+      </div>
+    </section>
+  </main>
+  <script src="js/data.js"></script>
+  <script src="js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-labelledby="logoTitle">
+  <title id="logoTitle">Fu Jen Catholic University — faith and the world</title>
+  <defs>
+    <linearGradient id="fjGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF4C8"/>
+      <stop offset="45%" stop-color="#E8C56A"/>
+      <stop offset="100%" stop-color="#D4A43A"/>
+    </linearGradient>
+    <radialGradient id="fjSky" cx="36%" cy="28%" r="72%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="55%" stop-color="#E7F4FC"/>
+      <stop offset="100%" stop-color="#C5DFF0"/>
+    </radialGradient>
+    <radialGradient id="fjGlobeFill" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#F3FBFF"/>
+      <stop offset="100%" stop-color="#A9D6EC"/>
+    </radialGradient>
+    <clipPath id="fjGlobe">
+      <circle cx="40" cy="42" r="21"/>
+    </clipPath>
+  </defs>
+
+  <circle cx="40" cy="40" r="38" fill="url(#fjSky)"/>
+  <circle cx="40" cy="40" r="36.6" fill="none" stroke="url(#fjGold)" stroke-width="2.3"/>
+  <circle cx="40" cy="40" r="33.2" fill="none" stroke="#F0D78A" stroke-width="0.5" opacity="0.9"/>
+
+  <path d="M40 8.8 L41.05 12.2 H44.7 L41.75 14.3 L42.85 17.7 L40 15.7 L37.15 17.7 L38.25 14.3 L35.3 12.2 H38.95 Z" fill="url(#fjGold)"/>
+
+  <ellipse cx="40" cy="42" rx="28" ry="10.5" fill="none" stroke="#B7D7EA" stroke-width="1.1" opacity="0.95" transform="rotate(-18 40 42)"/>
+
+  <circle cx="40" cy="42" r="21" fill="url(#fjGlobeFill)"/>
+  <g clip-path="url(#fjGlobe)" fill="none" stroke="#7FB6D4" stroke-width="0.85">
+    <ellipse cx="40" cy="42" rx="10" ry="21"/>
+    <ellipse cx="40" cy="42" rx="16.5" ry="21"/>
+    <ellipse cx="40" cy="42" rx="21" ry="8"/>
+    <ellipse cx="40" cy="42" rx="21" ry="15"/>
+  </g>
+  <circle cx="40" cy="42" r="21" fill="none" stroke="#E8C56A" stroke-width="1.35"/>
+
+  <g fill="url(#fjGold)">
+    <rect x="38.15" y="24.2" width="3.7" height="35.6" rx="1.4"/>
+    <rect x="28.4" y="33.1" width="23.2" height="3.5" rx="1.4"/>
+  </g>
+</svg>

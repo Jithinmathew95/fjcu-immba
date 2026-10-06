@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact | imMBA Fu Jen</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="contact">
+  <main id="main">
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="kicker" style="color:var(--gold)">Contact</p>
+        <h1 data-en>Write to the programme office.</h1>
+        <h1 data-zh>與學程辦公室聯繫。</h1>
+      </div>
+    </header>
+    <section class="section">
+      <div class="wrap split">
+        <div>
+          <p data-en>Ms. Chang · +886-2-2905-2750 · imMBA@mail.fju.edu.tw</p>
+          <p data-zh>張秘書 · 02-2905-2750 · imMBA@mail.fju.edu.tw</p>
+          <p data-en>Office LM208-1, No. 510 Zhongzheng Road, Xinzhuang District, New Taipei City 242062, Taiwan</p>
+          <p data-zh>242062 新北市新莊區中正路510號 LM208-1</p>
+          <p><a href="https://maps.google.com/?q=Fu+Jen+Catholic+University+Xinzhuang" target="_blank" rel="noreferrer">Google Maps</a></p>
+        </div>
+        <form class="form" data-contact-form>
+          <label>
+            <span data-en>Topic</span><span data-zh>主旨類別</span>
+            <select name="topic" required>
+              <option value="imMBA related">imMBA related</option>
+              <option value="Admissions">Admissions</option>
+              <option value="Dual degree">Dual degree</option>
+              <option value="Curriculum">Curriculum</option>
+            </select>
+          </label>
+          <label>
+            <span data-en>Name</span><span data-zh>姓名</span>
+            <input name="name" required>
+          </label>
+          <label>
+            <span data-en>Email</span><span data-zh>電子郵件</span>
+            <input name="email" type="email" required>
+          </label>
+          <label>
+            <span data-en>Phone</span><span data-zh>電話</span>
+            <input name="phone">
+          </label>
+          <label>
+            <span data-en>Message</span><span data-zh>留言</span>
+            <textarea name="message" rows="6" required></textarea>
+          </label>
+          <button class="btn btn-navy" type="submit"><span data-en>Submit</span><span data-zh>送出</span></button>
+          <p class="status hidden" data-form-status></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <script src="js/data.js"></script>
+  <script src="js/site.js"></script>
+</body>
+</html>
