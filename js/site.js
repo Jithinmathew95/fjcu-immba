@@ -6,13 +6,19 @@
     return document.documentElement.lang === "zh" ? "zh" : "en";
   }
 
+  function syncLangSwitch() {
+    const btn = document.querySelector("[data-lang-switch]");
+    if (!btn) return;
+    const isZh = lang() === "zh";
+    btn.textContent = isZh ? "English" : "中文版";
+    btn.setAttribute("aria-label", isZh ? "Switch to English" : "切換至中文版");
+  }
+
   function setLang(next) {
     const value = next === "zh" ? "zh" : "en";
     document.documentElement.lang = value;
     localStorage.setItem(STORAGE, value);
-    document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
-      btn.setAttribute("aria-pressed", String(btn.dataset.langBtn === next));
-    });
+    syncLangSwitch();
     renderDynamic();
   }
 
@@ -49,11 +55,28 @@
         <div class="nav-bar" data-nav>
           <div class="nav-bar-inner">
             <button class="menu-btn" type="button" data-menu>Menu</button>
-            <nav>
+            <nav data-main-nav>
               <ul>
-                <li><a data-nav-link="home" href="index.html"><span data-en>Home</span><span data-zh>首頁</span></a></li>
-                <li><a data-nav-link="admissions" href="admissions.html"><span data-en>Admissions</span><span data-zh>招生資訊</span></a></li>
-                <li><a data-nav-link="curriculum" href="curriculum.html"><span data-en>Curriculum</span><span data-zh>課程資訊</span></a></li>
+                <li class="has-sub">
+                  <a data-nav-link="about-parent" href="about.html"><span data-en>About</span><span data-zh>關於</span></a>
+                  <ul class="submenu">
+                    <li><a data-nav-link="about" href="about.html"><span data-en>Overview and Ranking</span><span data-zh>特色與排名</span></a></li>
+                    <li><a data-nav-link="environment" href="learning-environment.html"><span data-en>Our Learning Environment</span><span data-zh>學習環境</span></a></li>
+                  </ul>
+                </li>
+                <li class="has-sub">
+                  <a data-nav-link="admissions" href="admissions.html"><span data-en>Admissions</span><span data-zh>招生資訊</span></a>
+                  <ul class="submenu">
+                    <li><a data-nav-link="apply" href="admissions.html"><span data-en>Apply for Fu Jen imMBA</span><span data-zh>MBA招生資訊</span></a></li>
+                    <li><a data-nav-link="scholarships" href="scholarships.html"><span data-en>Scholarships</span><span data-zh>獎助學金資訊</span></a></li>
+                  </ul>
+                </li>
+                <li class="has-sub">
+                  <a data-nav-link="curriculum" href="curriculum.html"><span data-en>Courses</span><span data-zh>課程</span></a>
+                  <ul class="submenu">
+                    <li><a data-nav-link="requirements" href="curriculum.html"><span data-en>Curriculum and requirements</span><span data-zh>課程與修業規則</span></a></li>
+                  </ul>
+                </li>
                 <li><a data-nav-link="faculty" href="faculty.html"><span data-en>Faculty</span><span data-zh>師資介紹</span></a></li>
                 <li><a data-nav-link="guide" href="guide.html"><span data-en>imMBA Guide</span><span data-zh>就學指引</span></a></li>
                 <li><a data-nav-link="graduation" href="graduation.html"><span data-en>Graduation</span><span data-zh>畢業規定</span></a></li>
@@ -66,10 +89,7 @@
               </ul>
             </nav>
             <div class="nav-actions">
-              <div class="lang" role="group" aria-label="Language">
-                <button type="button" data-lang-btn="en" aria-pressed="true">English</button>
-                <button type="button" data-lang-btn="zh">中文</button>
-              </div>
+              <button type="button" class="lang-switch" data-lang-switch>中文版</button>
               <a class="nav-cta" href="admissions.html"><span data-en>Apply Now</span><span data-zh>立即申請</span></a>
             </div>
           </div>
@@ -79,6 +99,58 @@
 
   function footer() {
     return `
+      <section class="related-links" aria-labelledby="related-links-heading">
+        <div class="wrap">
+          <p class="kicker" style="color:var(--gold)" data-en>Related links</p>
+          <p class="kicker" style="color:var(--gold)" data-zh>相關連結</p>
+          <h2 id="related-links-heading" data-en>Find a page, a system, or a file.</h2>
+          <h2 id="related-links-heading-zh" data-zh>前往站內頁面、校外系統或檔案。</h2>
+          <div class="grid-4 related-grid">
+            <div>
+              <p class="meta" data-en>Internal</p>
+              <p class="meta" data-zh>站內連結</p>
+              <ul class="plain-list">
+                <li><a href="admissions.html"><span data-en>Admissions</span><span data-zh>招生資訊</span></a></li>
+                <li><a href="curriculum.html"><span data-en>Courses</span><span data-zh>課程</span></a></li>
+                <li><a href="faculty.html"><span data-en>Faculty</span><span data-zh>師資介紹</span></a></li>
+                <li><a href="gallery.html"><span data-en>Photo gallery</span><span data-zh>相片集錦</span></a></li>
+                <li><a href="contact.html"><span data-en>Contact us</span><span data-zh>聯絡我們</span></a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="meta" data-en>External</p>
+              <p class="meta" data-zh>外部連結</p>
+              <ul class="plain-list">
+                <li><a class="link-external" href="https://www.management.fju.edu.tw/esubweb/immbaengindex/" target="_blank" rel="noreferrer" data-en>Official imMBA site</a><a class="link-external" href="https://www.management.fju.edu.tw/subweb/immba/" target="_blank" rel="noreferrer" data-zh>imMBA 官方網站</a></li>
+                <li><a class="link-external" href="https://www.management.fju.edu.tw/index_en.php" target="_blank" rel="noreferrer" data-en>College of Management</a><a class="link-external" href="https://www.management.fju.edu.tw/" target="_blank" rel="noreferrer" data-zh>輔大管理學院</a></li>
+                <li><a class="link-external" href="https://www.fju.edu.tw/" target="_blank" rel="noreferrer"><span data-en>Fu Jen Catholic University</span><span data-zh>輔仁大學</span></a></li>
+                <li><a class="link-external" href="https://www.oie.fju.edu.tw/" target="_blank" rel="noreferrer"><span data-en>International Student Center</span><span data-zh>國際教育處</span></a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="meta" data-en>Action</p>
+              <p class="meta" data-zh>操作／申請</p>
+              <ul class="plain-list">
+                <li><a class="link-action" href="http://idsasys.oie.fju.edu.tw/" target="_blank" rel="noreferrer"><span data-en>Apply online</span><span data-zh>線上申請</span></a></li>
+                <li><a class="link-action" href="contact.html"><span data-en>Send a message</span><span data-zh>線上留言</span></a></li>
+                <li><a class="link-action" href="mailto:imMBA@mail.fju.edu.tw">imMBA@mail.fju.edu.tw</a></li>
+                <li><a class="link-action" href="tel:+886229052750">+886-2-2905-2750</a></li>
+                <li><a class="link-action" href="http://tuition.ga.fju.edu.tw/lnchargeStudent/index.jsp" target="_blank" rel="noreferrer"><span data-en>Tuition enquiry</span><span data-zh>學雜費查詢</span></a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="meta" data-en>Documents</p>
+              <p class="meta" data-zh>文件／資源</p>
+              <ul class="plain-list">
+                <li><a class="link-doc" href="https://www.management.fju.edu.tw/smarteditupfiles/immbaengindex/FJCU_115-1Admission.pdf" target="_blank" rel="noreferrer"><span data-en>Fall 2026 brochure (PDF)</span><span data-zh>115-1 招生簡章（PDF）</span></a></li>
+                <li><a class="link-external" href="https://www.management.fju.edu.tw/esubweb/immbaengindex/download.php" target="_blank" rel="noreferrer" data-en>Official download page</a><a class="link-external" href="https://www.management.fju.edu.tw/subweb/immba/download.php" target="_blank" rel="noreferrer" data-zh>官方檔案下載</a></li>
+                <li><a class="link-external" href="https://www.management.fju.edu.tw/esubweb/immbaengindex/class.php" target="_blank" rel="noreferrer"><span data-en>Course structures 112–115</span><span data-zh>112–115 修課結構</span></a></li>
+                <li><a href="downloads.html"><span data-en>All downloads</span><span data-zh>本站檔案下載</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
       <footer class="site-footer">
         <div class="wrap footer-grid">
           <div>
@@ -88,7 +160,7 @@
             <p data-zh>輔仁大學管理學院<br>242062 新北市新莊區中正路510號 LM208-1</p>
           </div>
           <div>
-            <p>T +886-2-2905-2750<br>E <a href="mailto:imMBA@mail.fju.edu.tw">imMBA@mail.fju.edu.tw</a></p>
+            <p>T <a class="link-action" href="tel:+886229052750">+886-2-2905-2750</a><br>E <a class="link-action" href="mailto:imMBA@mail.fju.edu.tw">imMBA@mail.fju.edu.tw</a></p>
             <p data-en>Ms. Chang, Programme Office</p>
             <p data-zh>張秘書／學程辦公室</p>
           </div>
@@ -96,7 +168,7 @@
             <p><a href="contact.html"><span data-en>Contact</span><span data-zh>聯絡我們</span></a></p>
             <p><a href="gallery.html"><span data-en>Photo gallery</span><span data-zh>相片集錦</span></a></p>
             <p><a href="about.html"><span data-en>Overview and ranking</span><span data-zh>特色與排名</span></a></p>
-            <p><a href="https://www.management.fju.edu.tw/esubweb/immbaengindex/" target="_blank" rel="noreferrer"><span data-en>Current official site</span><span data-zh>現行官方網站</span></a></p>
+            <p><a class="link-external" href="https://www.management.fju.edu.tw/esubweb/immbaengindex/" target="_blank" rel="noreferrer"><span data-en>Current official site</span><span data-zh>現行官方網站</span></a></p>
           </div>
         </div>
         <div class="wrap legal">
@@ -212,15 +284,24 @@
 
   document.body.insertAdjacentHTML("afterbegin", header());
   document.body.insertAdjacentHTML("beforeend", footer());
-  document.querySelector(`[data-nav-link="${page}"]`)?.classList.add("active");
+  document.querySelectorAll(`[data-nav-link="${page}"]`).forEach((el) => el.classList.add("active"));
+  if (["about", "environment"].includes(page)) {
+    document.querySelector('[data-nav-link="about-parent"]')?.classList.add("active");
+  }
+  if (["admissions", "scholarships", "apply"].includes(page)) {
+    document.querySelector('[data-nav-link="admissions"]')?.classList.add("active");
+  }
+  if (page === "curriculum") {
+    document.querySelector('[data-nav-link="requirements"]')?.classList.add("active");
+  }
 
   setLang(localStorage.getItem(STORAGE) || "en");
 
-  document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
-    btn.addEventListener("click", () => setLang(btn.dataset.langBtn));
+  document.querySelector("[data-lang-switch]")?.addEventListener("click", () => {
+    setLang(lang() === "zh" ? "en" : "zh");
   });
   document.querySelector("[data-menu]")?.addEventListener("click", () => {
-    document.querySelector("[data-nav]")?.classList.toggle("open");
+    document.querySelector("[data-main-nav]")?.classList.toggle("open");
   });
 
   const NAV_COLLAPSE = "immba-nav-collapsed";
