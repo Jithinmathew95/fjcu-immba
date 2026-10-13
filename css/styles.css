@@ -661,6 +661,20 @@ h1 {
   color: var(--navy);
 }
 
+.degree-options {
+  margin: 16px 0 24px;
+  padding-left: 22px;
+  color: var(--muted);
+}
+
+.degree-options > li {
+  margin-bottom: 12px;
+}
+
+.degree-options ul {
+  margin: 10px 0 0;
+}
+
 .split {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
@@ -795,6 +809,11 @@ h1 {
   color: var(--gold);
 }
 
+.link-internal {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .link-external::after {
   content: " ↗";
   font-size: 0.85em;
@@ -807,6 +826,14 @@ h1 {
   margin-left: 6px;
   color: var(--gold);
   font-weight: 700;
+}
+
+.link-action {
+  font-weight: 700;
+}
+
+a.btn.link-action::after {
+  content: none;
 }
 
 .grid-4 {

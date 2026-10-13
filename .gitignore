@@ -4,3 +4,6 @@ Desktop.ini
 .env
 .env.*
 *.log
+
+.vercel
+.env*

@@ -68,7 +68,6 @@
                   <a data-nav-link="admissions" href="admissions.html"><span data-en>Admissions</span><span data-zh>招生資訊</span></a>
                   <ul class="submenu">
                     <li><a data-nav-link="apply" href="admissions.html"><span data-en>Apply for Fu Jen imMBA</span><span data-zh>MBA招生資訊</span></a></li>
-                    <li><a data-nav-link="scholarships" href="scholarships.html"><span data-en>Scholarships</span><span data-zh>獎助學金資訊</span></a></li>
                   </ul>
                 </li>
                 <li class="has-sub">
