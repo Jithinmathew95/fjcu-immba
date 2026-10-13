@@ -819,13 +819,21 @@ h1 {
   font-size: 0.85em;
 }
 
-.link-doc::after {
-  content: " PDF";
+.link-doc::after,
+.link-xls::after {
   font-size: 10px;
   letter-spacing: 0.06em;
   margin-left: 6px;
   color: var(--gold);
   font-weight: 700;
+}
+
+.link-doc::after {
+  content: " PDF";
+}
+
+.link-xls::after {
+  content: " XLS";
 }
 
 .link-action {
