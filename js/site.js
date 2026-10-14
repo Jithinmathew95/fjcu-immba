@@ -83,11 +83,11 @@
                 <li><a data-nav-link="exchange" href="exchange.html"><span data-en>Overseas Exchange</span><span data-zh>海外交換</span></a></li>
                 <li><a data-nav-link="marketplace" href="marketplace.html"><span data-en>Marketplace</span><span data-zh>教材市集</span></a></li>
                 <li><a data-nav-link="events" href="events.html"><span data-en>Events</span><span data-zh>活動</span></a></li>
-                <li><a data-nav-link="news" href="news.html"><span data-en>Announcements</span><span data-zh>最新公告</span></a></li>
                 <li><a data-nav-link="downloads" href="downloads.html"><span data-en>Downloads</span><span data-zh>檔案下載</span></a></li>
               </ul>
             </nav>
             <div class="nav-actions">
+              <a class="nav-news" data-nav-link="news" href="news.html"><span data-en>News</span><span data-zh>最新消息</span></a>
               <button type="button" class="lang-switch" data-lang-switch>中文版</button>
               <a class="nav-cta" href="admissions.html"><span data-en>Apply Now</span><span data-zh>立即申請</span></a>
             </div>
@@ -114,6 +114,7 @@
                 <li><a href="faculty.html"><span data-en>Faculty</span><span data-zh>師資介紹</span></a></li>
                 <li><a href="gallery.html"><span data-en>Photo gallery</span><span data-zh>相片集錦</span></a></li>
                 <li><a href="contact.html"><span data-en>Contact us</span><span data-zh>聯絡我們</span></a></li>
+                <li><a href="admin-news.html"><span data-en>AdminNews</span><span data-zh>消息後台</span></a></li>
               </ul>
             </div>
             <div>
@@ -182,11 +183,20 @@
     return lang() === "zh" ? `${y}/${m}/${d}` : `${d} ${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m - 1]} ${y}`;
   }
 
+  function liveNews() {
+    if (window.IMMBANews) return window.IMMBANews.getPublished();
+    return window.IMMBA.news;
+  }
+
   function newsSorted() {
-    return [...window.IMMBA.news].sort((a, b) => {
-      if (a.pin !== b.pin) return a.pin ? -1 : 1;
-      return b.date.localeCompare(a.date);
-    });
+    return [...liveNews()]
+      .filter((n) => (n.status || "published") === "published")
+      .sort((a, b) => {
+        const orderA = Number(a.order) || 99;
+        const orderB = Number(b.order) || 99;
+        if (orderA !== orderB) return orderA - orderB;
+        return b.date.localeCompare(a.date);
+      });
   }
 
   function renderNewsList(target, limit) {
@@ -194,18 +204,35 @@
     const q = (document.querySelector("[data-news-search]")?.value || "").trim().toLowerCase();
     const items = newsSorted().filter((n) => {
       if (!q) return true;
-      return `${n.titleEn} ${n.titleZh} ${n.tagEn} ${n.tagZh} ${n.bodyEn}`.toLowerCase().includes(q);
+      return `${n.titleEn} ${n.titleZh} ${n.tagEn} ${n.tagZh} ${n.bodyEn} ${n.bodyZh}`.toLowerCase().includes(q);
     }).slice(0, limit || 99);
 
-    target.innerHTML = items.map((n) => `
-      <a class="news-item" href="news.html?id=${n.id}">
-        <time>${formatDate(n.date)}</time>
-        <div>
-          ${n.pin ? `<span class="pill">TOP</span>` : ""}
-          <h3>${lang() === "zh" ? n.titleZh : n.titleEn}</h3>
-        </div>
-        <span>${lang() === "zh" ? n.tagZh : n.tagEn}</span>
-      </a>`).join("") || `<p>${lang() === "zh" ? "沒有符合的公告。" : "No matching announcements."}</p>`;
+    const zh = lang() === "zh";
+    const cards = items.map((n) => {
+      const title = zh ? (n.titleZh || n.titleEn) : (n.titleEn || n.titleZh);
+      const link = n.link
+        ? `<p><a class="${/^https?:/i.test(n.link) ? "link-external" : "link-internal"}" href="${n.link}"${/^https?:/i.test(n.link) ? ' target="_blank" rel="noreferrer"' : ""}>${zh ? "相關連結" : "Related link"}</a></p>`
+        : "";
+      return `
+      <article class="news-card">
+        <time class="meta" datetime="${n.date}">${formatDate(n.date)}</time>
+        <h3>${title}</h3>
+        <p><a class="link-internal" href="news.html?id=${n.id}">${zh ? "查看詳情" : "View Details"}</a></p>
+        ${link}
+      </article>`;
+    }).join("");
+    target.innerHTML = (cards || `<p>${zh ? "沒有符合的消息。" : "No matching news."}</p>`) + newsSourceHtml();
+  }
+
+  function newsSourceHtml() {
+    const zh = lang() === "zh";
+    const href = zh
+      ? "https://www.management.fju.edu.tw/subweb/immba/"
+      : "https://www.management.fju.edu.tw/esubweb/immbaengindex/";
+    const label = zh
+      ? "輔仁大學管理學院國際經營管理碩士班（imMBA）官方網站"
+      : "Fu Jen Catholic University, College of Management, imMBA official website";
+    return `<p class="news-source">${zh ? "資料來源：" : "Source: "}<a class="link-external" href="${href}" target="_blank" rel="noreferrer">${label}</a></p>`;
   }
 
   function renderNewsDetail() {
@@ -217,18 +244,27 @@
       host.classList.add("hidden");
       return;
     }
-    const n = window.IMMBA.news.find((x) => x.id === id);
+    const n = liveNews().find((x) => x.id === id);
     document.querySelector("[data-news-index]")?.classList.add("hidden");
     host.classList.remove("hidden");
     if (!n) {
-      host.innerHTML = `<p>${lang() === "zh" ? "找不到這則公告。" : "Announcement not found."}</p>`;
+      host.innerHTML = `<p>${lang() === "zh" ? "找不到這則消息。" : "News item not found."}</p>`;
       return;
     }
+    const zh = lang() === "zh";
+    const title = zh ? (n.titleZh || n.titleEn) : (n.titleEn || n.titleZh);
+    const body = zh ? (n.bodyZh || n.bodyEn) : (n.bodyEn || n.bodyZh);
+    const tag = zh ? (n.tagZh || n.tagEn) : (n.tagEn || n.tagZh);
+    const link = n.link
+      ? `<p><a class="${/^https?:/i.test(n.link) ? "link-external" : "link-internal"}" href="${n.link}"${/^https?:/i.test(n.link) ? ' target="_blank" rel="noreferrer"' : ""}>${zh ? "相關連結" : "Related link"}</a></p>`
+      : "";
     host.innerHTML = `
-      <p class="meta">${formatDate(n.date)} · ${lang() === "zh" ? n.tagZh : n.tagEn}</p>
-      <h1>${lang() === "zh" ? n.titleZh : n.titleEn}</h1>
-      <div class="prose"><p>${lang() === "zh" ? n.bodyZh : n.bodyEn}</p>
-      <p><a class="btn btn-line" href="news.html">${lang() === "zh" ? "返回公告列表" : "Back to news"}</a></p></div>`;
+      <p class="meta">${formatDate(n.date)}${tag ? ` · ${tag}` : ""}</p>
+      <h1>${title}</h1>
+      <div class="prose"><p>${body}</p>
+      ${link}
+      ${newsSourceHtml()}
+      <p><a class="btn btn-line" href="news.html">${zh ? "返回消息列表" : "Back to news"}</a></p></div>`;
   }
 
   function renderFaculty() {
