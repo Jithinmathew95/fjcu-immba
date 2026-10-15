@@ -8,6 +8,8 @@
   const cancelBtn = document.querySelector("[data-form-cancel]");
   const formTitle = document.querySelector("[data-form-title]");
   const dirtyNote = document.querySelector("[data-dirty]");
+  const preview = document.querySelector("[data-photo-preview]");
+  const removePhotoBtn = document.querySelector("[data-photo-remove]");
   let items = window.IMMBANews.getDraft();
   let editingId = "";
 
@@ -29,9 +31,53 @@
   }
 
   function persist() {
-    window.IMMBANews.setDraft(items);
+    try {
+      window.IMMBANews.setDraft(items);
+    } catch (err) {
+      setStatus("Could not save. The photo may be too large for this browser. Use a photo URL instead.", "error");
+      throw err;
+    }
     renderList();
     updateDirty();
+  }
+
+  function showPreview(src) {
+    if (!preview) return;
+    const hasPhoto = Boolean(src);
+    preview.hidden = !hasPhoto;
+    preview.src = src || "";
+    removePhotoBtn?.classList.toggle("hidden", !hasPhoto);
+  }
+
+  function compressPhoto(file) {
+    return new Promise((resolve, reject) => {
+      if (!file || !file.type.startsWith("image/")) {
+        reject(new Error("Please choose an image file."));
+        return;
+      }
+      const image = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      image.onload = () => {
+        const max = 1200;
+        let width = image.width;
+        let height = image.height;
+        if (width > max) {
+          height = Math.round((height * max) / width);
+          width = max;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0, width, height);
+        URL.revokeObjectURL(objectUrl);
+        resolve(canvas.toDataURL("image/jpeg", 0.72));
+      };
+      image.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error("Could not read that image."));
+      };
+      image.src = objectUrl;
+    });
   }
 
   function updateDirty() {
@@ -49,6 +95,10 @@
     form.elements.id.value = "";
     form.elements.status.value = "published";
     form.elements.order.value = String(nextOrder());
+    form.elements.photo.value = "";
+    form.elements.photoUrl.value = "";
+    if (form.elements.photoFile) form.elements.photoFile.value = "";
+    showPreview("");
     formTitle.textContent = "Add a new announcement";
     submitBtn.textContent = "Add announcement";
     cancelBtn.classList.add("hidden");
@@ -66,6 +116,11 @@
     form.elements.tagZh.value = item.tagZh || "";
     form.elements.bodyEn.value = item.bodyEn || "";
     form.elements.bodyZh.value = item.bodyZh || "";
+    const photo = item.photo || "";
+    form.elements.photo.value = photo.startsWith("data:") ? photo : "";
+    form.elements.photoUrl.value = photo.startsWith("data:") ? "" : photo;
+    if (form.elements.photoFile) form.elements.photoFile.value = "";
+    showPreview(photo);
   }
 
   function fromForm() {
@@ -83,7 +138,8 @@
       titleEn,
       titleZh,
       bodyEn: form.elements.bodyEn.value.trim(),
-      bodyZh: form.elements.bodyZh.value.trim()
+      bodyZh: form.elements.bodyZh.value.trim(),
+      photo: form.elements.photoUrl.value.trim() || form.elements.photo.value.trim()
     }])[0];
   }
 
@@ -96,6 +152,7 @@
     });
     list.innerHTML = sorted.map((n) => `
       <tr>
+        <td>${n.photo ? `<img class="admin-thumb" src="${esc(n.photo)}" alt="">` : "—"}</td>
         <td>${esc(n.order)}</td>
         <td>${esc(n.date)}</td>
         <td><strong>${esc(n.titleEn)}</strong></td>
@@ -105,7 +162,7 @@
           <button type="button" class="btn btn-line" data-edit="${esc(n.id)}">Edit</button>
           <button type="button" class="btn btn-danger" data-delete="${esc(n.id)}">Delete</button>
         </td>
-      </tr>`).join("") || `<tr><td colspan="6">No announcements yet. Use the form to add one.</td></tr>`;
+      </tr>`).join("") || `<tr><td colspan="7">No announcements yet. Use the form to add one.</td></tr>`;
   }
 
   form.addEventListener("submit", (e) => {
@@ -115,17 +172,22 @@
       setStatus("Date plus Chinese and English titles and content are required in the same record.", "error");
       return;
     }
+    const previous = items;
     if (editingId) {
       items = items.map((item) => item.id === editingId ? { ...item, ...next, id: editingId } : item);
-      persist();
-      setStatus("Announcement updated. Synchronize to show it on the public News page.", "ok");
     } else {
       if (items.some((item) => item.id === next.id)) next.id = window.IMMBANews.slugify(next.titleEn);
       items = [next, ...items];
-      persist();
-      setStatus("Announcement added. Synchronize to show it on the public News page.", "ok");
     }
-    resetForm();
+    try {
+      persist();
+      setStatus(editingId
+        ? "Announcement updated. Synchronize to show it on the public News page."
+        : "Announcement added. Synchronize to show it on the public News page.", "ok");
+      resetForm();
+    } catch {
+      items = previous;
+    }
   });
 
   cancelBtn.addEventListener("click", () => {
@@ -165,6 +227,37 @@
     persist();
     setStatus("Default announcement list restored and synchronized with the front-end website.", "ok");
     updateDirty();
+  });
+
+  form.elements.photoFile?.addEventListener("change", async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const dataUrl = await compressPhoto(file);
+      form.elements.photo.value = dataUrl;
+      form.elements.photoUrl.value = "";
+      showPreview(dataUrl);
+      setStatus("Photo added. Save the announcement, then synchronize to show it on the public News page.", "ok");
+    } catch (err) {
+      setStatus(err.message || "Could not add that photo.", "error");
+    }
+  });
+
+  form.elements.photoUrl?.addEventListener("input", () => {
+    const url = form.elements.photoUrl.value.trim();
+    if (url) {
+      form.elements.photo.value = "";
+      showPreview(url);
+    } else if (!form.elements.photo.value) {
+      showPreview("");
+    }
+  });
+
+  removePhotoBtn?.addEventListener("click", () => {
+    form.elements.photo.value = "";
+    form.elements.photoUrl.value = "";
+    if (form.elements.photoFile) form.elements.photoFile.value = "";
+    showPreview("");
   });
 
   document.querySelector("[data-sync]")?.addEventListener("click", () => {

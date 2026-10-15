@@ -66,6 +66,7 @@
           <table class="admin-table">
             <thead>
               <tr>
+                <th>Photo</th>
                 <th>Order</th>
                 <th>Date</th>
                 <th>English title</th>
@@ -113,6 +114,19 @@
                 <option value="hidden">Hidden</option>
               </select>
             </label>
+            <label class="span-2">
+              Photo URL
+              <input name="photoUrl" type="text" placeholder="assets/… or https://…">
+            </label>
+            <label>
+              Upload a photo
+              <input name="photoFile" type="file" accept="image/*">
+            </label>
+            <div class="admin-photo-preview">
+              <input type="hidden" name="photo">
+              <img data-photo-preview alt="Announcement photo preview" hidden>
+              <button class="btn btn-line hidden" type="button" data-photo-remove>Remove photo</button>
+            </div>
           </div>
           <h3>Bilingual fields</h3>
           <div class="bilingual-grid">

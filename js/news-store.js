@@ -14,6 +14,7 @@ window.IMMBANews = (function () {
       id: item.id,
       date: item.date || fallback.date,
       link: item.link || fallback.link || "",
+      photo: item.photo || fallback.photo || "",
       order: Number.isFinite(order) ? order : (Number.isFinite(fallbackOrder) ? fallbackOrder : index + 1),
       status: item.status === "draft" || item.status === "hidden" ? item.status : (fallback.status || "published"),
       tagEn: item.tagEn || fallback.tagEn || "News",

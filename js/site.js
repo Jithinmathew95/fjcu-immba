@@ -42,15 +42,19 @@
       </div>
       <header class="site-header">
         <div class="brand-bar">
-          <a class="brand" href="index.html">
-            <img class="logo" src="assets/fjcu-logo.svg?v=3" width="64" height="64" alt="">
-            <span class="brand-text">
+          <div class="brand">
+            <a class="logo-link" href="admin-news.html">
+              <img class="logo" src="assets/fjcu-logo.svg?v=3" width="64" height="64" alt="">
+              <span class="visually-hidden" data-en>AdminNews back-office</span>
+              <span class="visually-hidden" data-zh>消息後台</span>
+            </a>
+            <a class="brand-text" href="index.html">
               <span class="brand-university" data-en>Fu Jen Catholic University</span>
               <span class="brand-university" data-zh>輔仁大學</span>
               <strong class="brand-program" data-en>International MBA (imMBA)</strong>
               <strong class="brand-program" data-zh>國際經營管理碩士班（imMBA）</strong>
-            </span>
-          </a>
+            </a>
+          </div>
         </div>
         <div class="nav-bar" data-nav>
           <div class="nav-bar-inner">
@@ -213,8 +217,10 @@
       const link = n.link
         ? `<p><a class="${/^https?:/i.test(n.link) ? "link-external" : "link-internal"}" href="${n.link}"${/^https?:/i.test(n.link) ? ' target="_blank" rel="noreferrer"' : ""}>${zh ? "相關連結" : "Related link"}</a></p>`
         : "";
+      const photo = n.photo ? `<img class="news-photo" src="${n.photo}" alt="">` : "";
       return `
       <article class="news-card">
+        ${photo}
         <time class="meta" datetime="${n.date}">${formatDate(n.date)}</time>
         <h3>${title}</h3>
         <p><a class="link-internal" href="news.html?id=${n.id}">${zh ? "查看詳情" : "View Details"}</a></p>
@@ -258,9 +264,11 @@
     const link = n.link
       ? `<p><a class="${/^https?:/i.test(n.link) ? "link-external" : "link-internal"}" href="${n.link}"${/^https?:/i.test(n.link) ? ' target="_blank" rel="noreferrer"' : ""}>${zh ? "相關連結" : "Related link"}</a></p>`
       : "";
+    const photo = n.photo ? `<img class="news-detail-photo" src="${n.photo}" alt="">` : "";
     host.innerHTML = `
       <p class="meta">${formatDate(n.date)}${tag ? ` · ${tag}` : ""}</p>
       <h1>${title}</h1>
+      ${photo}
       <div class="prose"><p>${body}</p>
       ${link}
       ${newsSourceHtml()}
