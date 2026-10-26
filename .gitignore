@@ -1,9 +1,13 @@
 .DS_Store
 Thumbs.db
 Desktop.ini
-.env
-.env.*
 *.log
 
+node_modules
+dist
+
+.env
+.env.*
+!.env.example
+
 .vercel
-.env*

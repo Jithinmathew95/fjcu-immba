@@ -402,7 +402,7 @@ nav a.active {
 .hero {
   background:
     linear-gradient(180deg, rgba(248, 252, 255, 0.55) 0%, rgba(255, 255, 255, 0.42) 48%, rgba(248, 251, 253, 0.62) 100%),
-    url("../assets/hero.jpg") center 42% / cover no-repeat;
+    url("/assets/hero.jpg") center 42% / cover no-repeat;
   color: var(--navy);
   padding: 108px 0 96px;
   text-align: center;
