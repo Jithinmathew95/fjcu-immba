@@ -15,164 +15,209 @@
     <header class="page-hero">
       <div class="wrap">
         <p class="kicker" style="color:var(--gold)">Back-office · AdminNews</p>
-        <h1>Designing the AdminNews back-office</h1>
-        <p class="lede">Create, read, update, and delete announcements, restore the default list, and synchronize with the public News page.</p>
+        <h1 data-en>AdminNews sign-in</h1>
+        <h1 data-zh>消息後台登入</h1>
+        <p class="lede" data-en>Sign in to create, edit, and publish announcements on the public News page.</p>
+        <p class="lede" data-zh>登入後即可新增、編輯公告，並同步到前台最新消息。</p>
       </div>
     </header>
 
-    <section class="section">
+    <section class="section" data-admin-login>
       <div class="wrap">
-        <div class="grid-4 admin-crud">
-          <article class="card">
-            <p class="meta">C — Create</p>
-            <h3>Add</h3>
-            <p>Add a new announcement.</p>
-          </article>
-          <article class="card">
-            <p class="meta">R — Read</p>
-            <h3>View</h3>
-            <p>View the current announcement list.</p>
-          </article>
-          <article class="card">
-            <p class="meta">U — Update</p>
-            <h3>Edit</h3>
-            <p>Edit an existing announcement.</p>
-          </article>
-          <article class="card">
-            <p class="meta">D — Delete</p>
-            <h3>Remove</h3>
-            <p>Remove an announcement.</p>
-          </article>
-        </div>
-        <div class="admin-toolbar">
-          <button type="button" class="btn btn-navy" data-sync>Synchronize with front-end</button>
-          <button type="button" class="btn btn-line" data-restore>Restore default list</button>
-          <a class="btn btn-line" href="news.html">View public News</a>
-          <p class="admin-dirty hidden" data-dirty>Unpublished changes — synchronize to update the website.</p>
-        </div>
-        <p class="status hidden" data-admin-status></p>
-      </div>
-    </section>
-
-    <section class="section alt" data-admin-news>
-      <div class="wrap">
-        <div class="section-head">
-          <div>
-            <p class="kicker" style="color:var(--gold)">Read</p>
-            <h2>Current announcement list</h2>
-          </div>
-        </div>
-        <div class="admin-table-wrap">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Photo</th>
-                <th>Order</th>
-                <th>Date</th>
-                <th>English title</th>
-                <th>Chinese title</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody data-admin-list></tbody>
-          </table>
+        <div class="admin-login">
+          <form class="form card" data-login-form>
+            <p class="meta">Restricted</p>
+            <h2 data-en>Sign in</h2>
+            <h2 data-zh>登入</h2>
+            <p data-en>Use the programme office account. New staff accounts are created in the Supabase project, not on this page.</p>
+            <p data-zh>請使用學程辦公室帳號。新帳號請在 Supabase 專案建立，不在此頁註冊。</p>
+            <label>
+              <span data-en>Email</span>
+              <span data-zh>電子郵件</span>
+              <input name="email" type="email" autocomplete="username" required>
+            </label>
+            <label>
+              <span data-en>Password</span>
+              <span data-zh>密碼</span>
+              <input name="password" type="password" autocomplete="current-password" required>
+            </label>
+            <p class="status hidden" data-login-status hidden></p>
+            <button class="btn btn-navy" type="submit" data-login-submit>
+              <span data-en>Sign in</span>
+              <span data-zh>登入</span>
+            </button>
+          </form>
         </div>
       </div>
     </section>
 
-    <section class="section">
+    <div class="hidden" data-admin-office hidden>
       <div class="wrap">
-        <div class="section-head">
-          <div>
-            <p class="kicker" style="color:var(--gold)">Create / Update</p>
-            <h2 data-form-title>Add a new announcement</h2>
-            <p>One announcement, two languages. Chinese and English are stored in the same record.</p>
-          </div>
-        </div>
-        <form class="form admin-form" data-news-form>
-          <input type="hidden" name="id">
-          <h3>Shared fields</h3>
-          <div class="admin-form-grid">
-            <label>
-              Date
-              <input name="date" type="date" required>
-            </label>
-            <label>
-              Link URL
-              <input name="link" type="text" placeholder="https://… or admissions.html">
-            </label>
-            <label>
-              Display order
-              <input name="order" type="number" min="1" step="1" required>
-            </label>
-            <label>
-              Status
-              <select name="status" required>
-                <option value="published">Published</option>
-                <option value="draft">Draft</option>
-                <option value="hidden">Hidden</option>
-              </select>
-            </label>
-            <label class="span-2">
-              Photo URL
-              <input name="photoUrl" type="text" placeholder="assets/… or https://…">
-            </label>
-            <label>
-              Upload a photo
-              <input name="photoFile" type="file" accept="image/*">
-            </label>
-            <div class="admin-photo-preview">
-              <input type="hidden" name="photo">
-              <img data-photo-preview alt="Announcement photo preview" hidden>
-              <button class="btn btn-line hidden" type="button" data-photo-remove>Remove photo</button>
-            </div>
-          </div>
-          <h3>Bilingual fields</h3>
-          <div class="bilingual-grid">
+        <p class="admin-session hidden" data-admin-session>
+          <span data-en>Signed in as</span>
+          <span data-zh>登入身分</span>
+          <strong data-admin-email></strong>
+          <button type="button" class="btn btn-line" data-logout>
+            <span data-en>Sign out</span>
+            <span data-zh>登出</span>
+          </button>
+        </p>
+      </div>
+
+      <section class="section">
+        <div class="wrap">
+          <div class="grid-4 admin-crud">
             <article class="card">
-              <p class="meta">中文</p>
-              <label>
-                Chinese title
-                <input name="titleZh" required>
-              </label>
-              <label>
-                Chinese content
-                <textarea name="bodyZh" rows="8" required></textarea>
-              </label>
-              <label>
-                Chinese tag
-                <input name="tagZh" placeholder="招生">
-              </label>
+              <p class="meta">C — Create</p>
+              <h3>Add</h3>
+              <p>Add a new announcement.</p>
             </article>
             <article class="card">
-              <p class="meta">English</p>
-              <label>
-                English title
-                <input name="titleEn" required>
-              </label>
-              <label>
-                English content
-                <textarea name="bodyEn" rows="8" required></textarea>
-              </label>
-              <label>
-                English tag
-                <input name="tagEn" placeholder="Admissions">
-              </label>
+              <p class="meta">R — Read</p>
+              <h3>View</h3>
+              <p>View the current announcement list.</p>
+            </article>
+            <article class="card">
+              <p class="meta">U — Update</p>
+              <h3>Edit</h3>
+              <p>Edit an existing announcement.</p>
+            </article>
+            <article class="card">
+              <p class="meta">D — Delete</p>
+              <h3>Remove</h3>
+              <p>Remove an announcement.</p>
             </article>
           </div>
           <div class="admin-toolbar">
-            <button class="btn btn-navy" type="submit" data-form-submit>Add announcement</button>
-            <button class="btn btn-line hidden" type="button" data-form-cancel>Cancel edit</button>
+            <button type="button" class="btn btn-navy" data-sync>Synchronize with front-end</button>
+            <button type="button" class="btn btn-line" data-restore>Restore default list</button>
+            <a class="btn btn-line" href="news.html">View public News</a>
+            <p class="admin-dirty hidden" data-dirty>Unpublished changes — synchronize to update the website.</p>
           </div>
-        </form>
-      </div>
-    </section>
+          <p class="status hidden" data-admin-status></p>
+        </div>
+      </section>
+
+      <section class="section alt" data-admin-news>
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="kicker" style="color:var(--gold)">Read</p>
+              <h2>Current announcement list</h2>
+            </div>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Order</th>
+                  <th>Date</th>
+                  <th>English title</th>
+                  <th>Chinese title</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody data-admin-list></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="kicker" style="color:var(--gold)">Create / Update</p>
+              <h2 data-form-title>Add a new announcement</h2>
+              <p>One announcement, two languages. Chinese and English are stored in the same record.</p>
+            </div>
+          </div>
+          <form class="form admin-form" data-news-form>
+            <input type="hidden" name="id">
+            <h3>Shared fields</h3>
+            <div class="admin-form-grid">
+              <label>
+                Date
+                <input name="date" type="date" required>
+              </label>
+              <label>
+                Link URL
+                <input name="link" type="text" placeholder="https://… or admissions.html">
+              </label>
+              <label>
+                Display order
+                <input name="order" type="number" min="1" step="1" required>
+              </label>
+              <label>
+                Status
+                <select name="status" required>
+                  <option value="published">Published</option>
+                  <option value="draft">Draft</option>
+                  <option value="hidden">Hidden</option>
+                </select>
+              </label>
+              <label class="span-2">
+                Photo URL
+                <input name="photoUrl" type="text" placeholder="assets/… or https://…">
+              </label>
+              <label>
+                Upload a photo
+                <input name="photoFile" type="file" accept="image/*">
+              </label>
+              <div class="admin-photo-preview">
+                <input type="hidden" name="photo">
+                <img data-photo-preview alt="Announcement photo preview" hidden>
+                <button class="btn btn-line hidden" type="button" data-photo-remove>Remove photo</button>
+              </div>
+            </div>
+            <h3>Bilingual fields</h3>
+            <div class="bilingual-grid">
+              <article class="card">
+                <p class="meta">中文</p>
+                <label>
+                  Chinese title
+                  <input name="titleZh" required>
+                </label>
+                <label>
+                  Chinese content
+                  <textarea name="bodyZh" rows="8" required></textarea>
+                </label>
+                <label>
+                  Chinese tag
+                  <input name="tagZh" placeholder="招生">
+                </label>
+              </article>
+              <article class="card">
+                <p class="meta">English</p>
+                <label>
+                  English title
+                  <input name="titleEn" required>
+                </label>
+                <label>
+                  English content
+                  <textarea name="bodyEn" rows="8" required></textarea>
+                </label>
+                <label>
+                  English tag
+                  <input name="tagEn" placeholder="Admissions">
+                </label>
+              </article>
+            </div>
+            <div class="admin-toolbar">
+              <button class="btn btn-navy" type="submit" data-form-submit>Add announcement</button>
+              <button class="btn btn-line hidden" type="button" data-form-cancel>Cancel edit</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
   </main>
   <script src="/js/data.js"></script>
   <script src="/js/news-store.js"></script>
   <script src="/js/site.js"></script>
   <script src="/js/admin-news.js"></script>
-  <script type="module" src="/src/main.js"></script>
+  <script type="module" src="/src/admin-auth.js"></script>
 </body>
 </html>

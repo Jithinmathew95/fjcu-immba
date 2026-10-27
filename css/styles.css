@@ -987,6 +987,39 @@ a.btn.link-action::after {
   border-color: #e3cfcf;
 }
 
+.admin-login {
+  max-width: 440px;
+}
+
+.admin-login .card {
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+}
+
+.admin-login .card h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.admin-login .card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.admin-session {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.admin-session strong {
+  color: var(--navy);
+}
+
 .admin-crud {
   margin-bottom: 28px;
 }
