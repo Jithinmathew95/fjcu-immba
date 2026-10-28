@@ -41,6 +41,18 @@
     updateDirty();
   }
 
+  async function publishToSite() {
+    persist();
+    const publish = window.IMMBANews.publishRemote;
+    if (typeof publish !== "function") {
+      throw new Error("Supabase is not ready. Refresh the page and sign in again.");
+    }
+    items = await publish(items);
+    persist();
+    window.IMMBANews.syncToFrontend();
+    updateDirty();
+  }
+
   function showPreview(src) {
     if (!preview) return;
     const hasPhoto = Boolean(src);
@@ -86,7 +98,7 @@
   }
 
   function nextOrder() {
-    return items.reduce((max, item) => Math.max(max, Number(item.order) || 0), 0) + 1;
+    return 1;
   }
 
   function resetForm() {
@@ -145,8 +157,8 @@
 
   function renderList() {
     const sorted = [...items].sort((a, b) => {
-      const orderA = Number(a.order) || 99;
-      const orderB = Number(b.order) || 99;
+      const orderA = Number.isFinite(Number(a.order)) ? Number(a.order) : 99;
+      const orderB = Number.isFinite(Number(b.order)) ? Number(b.order) : 99;
       if (orderA !== orderB) return orderA - orderB;
       return b.date.localeCompare(a.date);
     });
@@ -177,14 +189,26 @@
       items = items.map((item) => item.id === editingId ? { ...item, ...next, id: editingId } : item);
     } else {
       if (items.some((item) => item.id === next.id)) next.id = window.IMMBANews.slugify(next.titleEn);
+      next.order = Number(next.order) || 1;
+      items = items.map((item) => ({
+        ...item,
+        order: (Number.isFinite(Number(item.order)) ? Number(item.order) : 1) + (next.order <= (Number(item.order) || 1) ? 1 : 0)
+      }));
       items = [next, ...items];
     }
     try {
       persist();
-      setStatus(editingId
-        ? "Announcement updated. Synchronize to show it on the public News page."
-        : "Announcement added. Synchronize to show it on the public News page.", "ok");
-      resetForm();
+      setStatus("Saving for the public News page…");
+      publishToSite()
+        .then(() => {
+          setStatus("Announcement saved. It is now on the public News page.", "ok");
+          resetForm();
+        })
+        .catch((err) => {
+          items = previous;
+          persist();
+          setStatus(err.message || "Saved on this computer only. Sign in again and click Synchronize to publish.", "error");
+        });
     } catch {
       items = previous;
     }
@@ -213,10 +237,18 @@
       const item = items.find((n) => n.id === deleteId);
       if (!item) return;
       if (!confirm(`Delete “${item.titleEn}”?`)) return;
+      const previous = items;
       items = items.filter((n) => n.id !== deleteId);
       persist();
       if (editingId === deleteId) resetForm();
-      setStatus("Announcement removed from the admin list. Synchronize to remove it from the public News page.", "ok");
+      setStatus("Removing from the public News page…");
+      publishToSite()
+        .then(() => setStatus("Announcement removed from the public News page.", "ok"))
+        .catch((err) => {
+          items = previous;
+          persist();
+          setStatus(err.message || "Could not remove it for the public site. Sign in and try again.", "error");
+        });
     }
   });
 
@@ -225,8 +257,10 @@
     items = window.IMMBANews.restoreDefaults();
     resetForm();
     persist();
-    setStatus("Default announcement list restored and synchronized with the front-end website.", "ok");
-    updateDirty();
+    setStatus("Restoring the default list for everyone…");
+    publishToSite()
+      .then(() => setStatus("Default announcement list restored on the public News page.", "ok"))
+      .catch((err) => setStatus(err.message || "Restored here only. Click Synchronize after signing in.", "error"));
   });
 
   form.elements.photoFile?.addEventListener("change", async (e) => {
@@ -261,11 +295,20 @@
   });
 
   document.querySelector("[data-sync]")?.addEventListener("click", () => {
-    window.IMMBANews.setDraft(items);
-    window.IMMBANews.syncToFrontend();
-    updateDirty();
-    setStatus("Front-end website updated. Open News to see the published list.", "ok");
+    setStatus("Publishing to the public News page…");
+    publishToSite()
+      .then(() => setStatus("Public News page updated. Open News to see the published list.", "ok"))
+      .catch((err) => setStatus(err.message || "Could not publish. Sign in and try Synchronize again.", "error"));
   });
+
+  window.IMMBANewsAdmin = {
+    reload(list) {
+      items = window.IMMBANews.normalizeList(list || window.IMMBANews.getDraft());
+      renderList();
+      updateDirty();
+      resetForm();
+    }
+  };
 
   renderList();
   updateDirty();

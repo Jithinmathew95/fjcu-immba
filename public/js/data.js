@@ -1,6 +1,20 @@
 window.IMMBA = {
   news: [
     {
+      id: "office-adminnews-live",
+      date: "2026-10-27",
+      link: "news.html",
+      photo: "assets/hero.jpg",
+      order: 1,
+      status: "published",
+      tagEn: "News",
+      tagZh: "消息",
+      titleEn: "Programme office notice: AdminNews back office is live",
+      titleZh: "學程辦公室公告：消息後台已啟用",
+      bodyEn: "The programme office can now add bilingual announcements from AdminNews. This item was published from the back office.",
+      bodyZh: "學程辦公室可於 AdminNews 後台新增中英對照公告。本則由後台發布。"
+    },
+    {
       id: "spring-2027",
       date: "2026-08-19",
       link: "admissions.html",
@@ -97,14 +111,14 @@ window.IMMBA = {
     },
     {
       id: "ai-digital-product",
-      date: "2026-08-19",
+      date: "2026-10-27",
       link: "curriculum.html",
-      order: 8,
+      order: 0,
       status: "published",
       tagEn: "Curriculum",
       tagZh: "課程",
-      titleEn: "New course spotlight: AI-Assisted Digital Product Development",
-      titleZh: "新課介紹｜AI-Assisted Digital Product Development",
+      titleEn: "AI-Assisted Digital Product Development: Building Smarter, Faster",
+      titleZh: "AI 輔助數位產品開發：更快、更聰明",
       bodyEn: "Students work with AI-assisted workflows to frame, prototype, and evaluate digital products in an international management context.",
       bodyZh: "課程引導學生以 AI 輔助流程構思、原型與評估數位產品，並置於國際管理情境中思考。"
     },
@@ -138,6 +152,7 @@ window.IMMBA = {
   faculty: [
     {
       name: "Yi-Ning Tu",
+      photo: "assets/faculty/yi-ning-tu.jpg",
       nameZh: "杜逸寧",
       roleEn: "Associate Professor and Chair, imMBA",
       roleZh: "副教授兼國際經營管理碩士班主任",
@@ -151,6 +166,7 @@ window.IMMBA = {
     },
     {
       name: "Michael T. S. Lee",
+      photo: "assets/faculty/michael-t-s-lee.jpg",
       nameZh: "李天行",
       roleEn: "Chair Professor",
       roleZh: "講座教授",
@@ -163,6 +179,7 @@ window.IMMBA = {
     },
     {
       name: "Yaonan Lin",
+      photo: "assets/faculty/yaonan-lin.jpg",
       nameZh: "林瑤南",
       roleEn: "Professor",
       roleZh: "教授",
@@ -175,6 +192,7 @@ window.IMMBA = {
     },
     {
       name: "Yu-Ming Hsu",
+      photo: "assets/faculty/yu-ming-hsu.jpg",
       nameZh: "許聿銘",
       roleEn: "Associate Professor, Director of MS Program in Technology Management",
       roleZh: "副教授兼科技管理碩士班主任",
@@ -187,6 +205,7 @@ window.IMMBA = {
     },
     {
       name: "Chih-An Lin",
+      photo: "assets/faculty/chih-an-lin.jpg",
       nameZh: "林芷安",
       roleEn: "Associate Professor, Director of the Academic Exchange Center",
       roleZh: "副教授兼學術交流中心主任",
@@ -199,6 +218,7 @@ window.IMMBA = {
     },
     {
       name: "Kai-Ping Huang",
+      photo: "assets/faculty/kai-ping-huang.jpg",
       nameZh: "黃凱平",
       roleEn: "Associate Professor",
       roleZh: "副教授",
@@ -211,6 +231,7 @@ window.IMMBA = {
     },
     {
       name: "Hsiang-Ching Tseng",
+      photo: "assets/faculty/hsiang-ching-tseng.png",
       nameZh: "曾祥景",
       roleEn: "Associate Professor",
       roleZh: "副教授",
@@ -223,6 +244,7 @@ window.IMMBA = {
     },
     {
       name: "Mei-Chun Lin",
+      photo: "assets/faculty/mei-chun-lin.jpg",
       nameZh: "林美純",
       roleEn: "Associate Professor",
       roleZh: "副教授",
@@ -235,6 +257,7 @@ window.IMMBA = {
     },
     {
       name: "Shu-Ling Cheng",
+      photo: "assets/faculty/shu-ling-cheng.jpg",
       nameZh: "鄭淑玲",
       roleEn: "Associate Professor",
       roleZh: "副教授",
@@ -247,6 +270,7 @@ window.IMMBA = {
     },
     {
       name: "Pi-Chan Hu",
+      photo: "assets/faculty/pi-chan-hu.jpg",
       nameZh: "胡碧嬋",
       roleEn: "Associate Professor",
       roleZh: "副教授",
@@ -259,6 +283,7 @@ window.IMMBA = {
     },
     {
       name: "Tsui-Lin Chiang",
+      photo: "assets/faculty/tsui-lin-chiang.jpg",
       nameZh: "姜翠林",
       roleEn: "Assistant Professor",
       roleZh: "助理教授",
@@ -271,6 +296,7 @@ window.IMMBA = {
     },
     {
       name: "Shu-wen Lin",
+      photo: "assets/faculty/shu-wen-lin.png",
       nameZh: "林淑雯",
       roleEn: "Assistant Professor",
       roleZh: "助理教授",
@@ -283,6 +309,7 @@ window.IMMBA = {
     },
     {
       name: "Meng-Hsien Yen",
+      photo: "assets/faculty/meng-hsien-yen.jpg",
       nameZh: "顏孟賢",
       roleEn: "Assistant Professor",
       roleZh: "助理教授",
@@ -295,6 +322,7 @@ window.IMMBA = {
     },
     {
       name: "Hao-Hsin Hsu",
+      photo: "assets/faculty/hao-hsin-hsu.png",
       nameZh: "徐浩信",
       roleEn: "Assistant Professor",
       roleZh: "助理教授",
@@ -307,6 +335,7 @@ window.IMMBA = {
     },
     {
       name: "Kai-Pin Huang",
+      photo: "assets/faculty/kai-pin-huang.jpg",
       nameZh: "黃凱斌",
       roleEn: "Assistant Professor",
       roleZh: "助理教授",
@@ -319,6 +348,7 @@ window.IMMBA = {
     },
     {
       name: "Lai Ferry Sugianto",
+      photo: "assets/faculty/lai-ferry-sugianto.png",
       nameZh: "Lai Ferry Sugianto",
       roleEn: "Assistant Professor",
       roleZh: "助理教授",
@@ -331,6 +361,7 @@ window.IMMBA = {
     },
     {
       name: "Tsang-Hsien Wang",
+      photo: "assets/faculty/tsang-hsien-wang.png",
       nameZh: "王蒼憲",
       roleEn: "Assistant Professor",
       roleZh: "助理教授",
@@ -343,6 +374,7 @@ window.IMMBA = {
     },
     {
       name: "Chia-Hua Lin",
+      photo: "assets/faculty/chia-hua-lin.jpg",
       nameZh: "林佳樺",
       roleEn: "Assistant Professor",
       roleZh: "助理教授",
@@ -355,6 +387,7 @@ window.IMMBA = {
     },
     {
       name: "Hui-Mei Wang",
+      photo: "assets/faculty/hui-mei-wang.jpg",
       nameZh: "王慧美",
       roleEn: "Part-time Associate Professor, former imMBA Chair",
       roleZh: "兼任副教授（前國際經營管理碩士班主任）",

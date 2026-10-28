@@ -196,8 +196,8 @@
     return [...liveNews()]
       .filter((n) => (n.status || "published") === "published")
       .sort((a, b) => {
-        const orderA = Number(a.order) || 99;
-        const orderB = Number(b.order) || 99;
+        const orderA = Number.isFinite(Number(a.order)) ? Number(a.order) : 99;
+        const orderB = Number.isFinite(Number(b.order)) ? Number(b.order) : 99;
         if (orderA !== orderB) return orderA - orderB;
         return b.date.localeCompare(a.date);
       });
@@ -284,15 +284,24 @@
       if (!q) return true;
       return `${f.name} ${f.nameZh} ${f.specEn} ${f.specZh} ${f.roleEn}`.toLowerCase().includes(q);
     });
-    host.innerHTML = items.map((f) => `
+    host.innerHTML = items.map((f) => {
+      const name = zh ? f.nameZh : f.name;
+      const photo = f.photo
+        ? `<img class="faculty-photo" src="${f.photo}" alt="${name}" width="160" height="200">`
+        : "";
+      return `
       <article class="faculty-card">
-        <h3>${zh ? f.nameZh : f.name}</h3>
-        <p>${zh ? f.roleZh : f.roleEn}</p>
-        <p>${zh ? f.eduZh : f.eduEn}</p>
-        <p>${zh ? f.specZh : f.specEn}</p>
-        ${f.tel ? `<p>${f.tel}</p>` : ""}
-        <p><a href="mailto:${f.email}">${f.email}</a>${f.web ? ` · <a href="${f.web}" target="_blank" rel="noreferrer">Website</a>` : ""}</p>
-      </article>`).join("");
+        ${photo}
+        <div class="faculty-copy">
+          <h3>${name}</h3>
+          <p>${zh ? f.roleZh : f.roleEn}</p>
+          <p>${zh ? f.eduZh : f.eduEn}</p>
+          <p>${zh ? f.specZh : f.specEn}</p>
+          ${f.tel ? `<p>${f.tel}</p>` : ""}
+          <p><a href="mailto:${f.email}">${f.email}</a>${f.web ? ` · <a href="${f.web}" target="_blank" rel="noreferrer">Website</a>` : ""}</p>
+        </div>
+      </article>`;
+    }).join("");
   }
 
   function renderHomeNews() {
@@ -304,6 +313,35 @@
     renderNewsList(document.querySelector("[data-news-list]"));
     renderNewsDetail();
     renderFaculty();
+    observeReveal();
+  }
+
+  function observeReveal() {
+    const nodes = document.querySelectorAll(".hero-inner, .page-hero .wrap, .stats-grid > div, .card, .news-card, .faculty-card, .partner, .env-shot, .photo, .step");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      nodes.forEach((el) => el.classList.add("is-in"));
+      return;
+    }
+    if (!observeReveal.io) {
+      observeReveal.io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-in");
+          observeReveal.io.unobserve(entry.target);
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -36px 0px" });
+    }
+    nodes.forEach((el) => {
+      if (el.classList.contains("is-in")) return;
+      const rect = el.getBoundingClientRect();
+      const visible = rect.top < window.innerHeight - 24 && rect.bottom > 0;
+      if (visible) {
+        el.classList.add("is-in");
+        return;
+      }
+      el.classList.add("reveal");
+      observeReveal.io.observe(el);
+    });
   }
 
   function bindContact() {
@@ -370,4 +408,6 @@
   document.querySelector("[data-news-search]")?.addEventListener("input", () => renderNewsList(document.querySelector("[data-news-list]")));
   document.querySelector("[data-faculty-search]")?.addEventListener("input", renderFaculty);
   bindContact();
+  observeReveal();
+  window.refreshImmbaNews = renderDynamic;
 })();

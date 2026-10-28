@@ -1,4 +1,5 @@
 import { supabase, supabaseConfigError } from "./lib/supabaseClient.js";
+import { fetchAllAnnouncements, replaceAllAnnouncements } from "./lib/newsApi.js";
 
 const loginSection = document.querySelector("[data-admin-login]");
 const office = document.querySelector("[data-admin-office]");
@@ -27,6 +28,28 @@ function showOffice(user) {
   setVisible(office, true);
   setVisible(sessionBar, true);
   if (emailLabel) emailLabel.textContent = user.email || "Signed in";
+}
+
+if (window.IMMBANews && supabase) {
+  window.IMMBANews.publishRemote = async (list) => {
+    return replaceAllAnnouncements(supabase, list);
+  };
+}
+
+async function loadOfficeNews() {
+  if (!supabase || !window.IMMBANews) return;
+  try {
+    const remote = await fetchAllAnnouncements(supabase);
+    let list = window.IMMBANews.mergeLists(window.IMMBANews.defaults(), window.IMMBANews.getDraft(), remote);
+    if (list.some((item) => String(item.photo || "").startsWith("data:")) && window.IMMBANews.publishRemote) {
+      list = await window.IMMBANews.publishRemote(list);
+    }
+    window.IMMBANews.hydrateDraft(list);
+    window.IMMBANews.hydratePublished(list.filter((item) => (item.status || "published") === "published"));
+    window.IMMBANewsAdmin?.reload(list);
+  } catch (err) {
+    setLoginStatus(err.message || "Could not load announcements from Supabase.", "error");
+  }
 }
 
 function showLogin() {
@@ -79,6 +102,7 @@ if (!supabase) {
     if (session?.user) {
       showOffice(session.user);
       setLoginStatus("");
+      loadOfficeNews();
     } else {
       showLogin();
     }

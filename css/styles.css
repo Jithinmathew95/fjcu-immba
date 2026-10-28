@@ -344,7 +344,7 @@ nav a.active {
 }
 
 .submenu {
-  display: none;
+  display: block;
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
@@ -356,11 +356,19 @@ nav a.active {
   border: 1px solid #2c4a62;
   box-shadow: 0 12px 28px rgba(16, 36, 58, 0.18);
   z-index: 12;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
 }
 
 .has-sub:hover > .submenu,
 .has-sub:focus-within > .submenu {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
 }
 
 .submenu a {
@@ -400,6 +408,8 @@ nav a.active {
 }
 
 .hero {
+  position: relative;
+  overflow: hidden;
   background:
     linear-gradient(180deg, rgba(248, 252, 255, 0.55) 0%, rgba(255, 255, 255, 0.42) 48%, rgba(248, 251, 253, 0.62) 100%),
     url("/assets/hero.jpg") center 42% / cover no-repeat;
@@ -407,6 +417,7 @@ nav a.active {
   padding: 108px 0 96px;
   text-align: center;
   border-bottom: 1px solid var(--line);
+  animation: heroDrift 22s ease-in-out infinite alternate;
 }
 
 .hero h1,
@@ -499,6 +510,12 @@ h1 {
   font-weight: 700;
   letter-spacing: normal;
   text-transform: none;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, color 0.22s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(16, 36, 58, 0.12);
 }
 
 .btn-gold {
@@ -845,6 +862,26 @@ h1 {
   gap: 16px;
 }
 
+.faculty-card {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.faculty-photo {
+  display: block;
+  width: 128px;
+  height: 160px;
+  object-fit: cover;
+  object-position: center 20%;
+  background: #ece7de;
+  flex: 0 0 128px;
+}
+
+.faculty-copy {
+  min-width: 0;
+}
+
 .faculty-card h3 {
   font-size: 24px;
   margin-bottom: 4px;
@@ -1183,6 +1220,10 @@ a.btn.link-action::after {
     border: 0;
     box-shadow: none;
     background: transparent;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
   }
 
   .submenu a {
@@ -1200,6 +1241,12 @@ a.btn.link-action::after {
     grid-template-columns: 1fr;
   }
 
+  .faculty-photo {
+    width: 96px;
+    height: 120px;
+    flex-basis: 96px;
+  }
+
   .news-list,
   .admin-form-grid,
   .bilingual-grid {
@@ -1209,5 +1256,136 @@ a.btn.link-action::after {
   .hero,
   .section {
     padding: 56px 0;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.stats-grid > .reveal:nth-child(1) { transition-delay: 0.05s; }
+.stats-grid > .reveal:nth-child(2) { transition-delay: 0.12s; }
+.stats-grid > .reveal:nth-child(3) { transition-delay: 0.19s; }
+.stats-grid > .reveal:nth-child(4) { transition-delay: 0.26s; }
+
+.card,
+.news-card,
+.faculty-card,
+.partner,
+.env-shot,
+.photo {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.card:hover,
+.news-card:hover,
+.faculty-card:hover,
+.partner:hover,
+.env-shot:hover,
+.photo:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px rgba(16, 36, 58, 0.12);
+}
+
+.news-list .news-card,
+.faculty-card,
+.env-shot {
+  overflow: hidden;
+}
+
+.news-photo,
+.faculty-photo,
+.env-shot img,
+.news-detail-photo {
+  transition: transform 0.7s ease;
+}
+
+.news-card:hover .news-photo,
+.faculty-card:hover .faculty-photo,
+.env-shot:hover img {
+  transform: scale(1.06);
+}
+
+.logo {
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.logo-link:hover .logo {
+  transform: scale(1.06);
+}
+
+.nav-cta {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(16, 36, 58, 0.16);
+}
+
+@keyframes heroDrift {
+  from { background-position: center 38%; }
+  to { background-position: center 48%; }
+}
+
+@keyframes goldPulse {
+  0%, 100% { letter-spacing: 0.02em; opacity: 1; }
+  50% { letter-spacing: 0.06em; opacity: 0.88; }
+}
+
+.page-hero .kicker {
+  animation: goldPulse 4.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero,
+  .page-hero .kicker {
+    animation: none;
+  }
+
+  .reveal,
+  .btn,
+  .card,
+  .news-card,
+  .faculty-card,
+  .partner,
+  .env-shot,
+  .photo,
+  .news-photo,
+  .faculty-photo,
+  .env-shot img,
+  .logo,
+  .nav-cta,
+  .submenu {
+    transition: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .card:hover,
+  .news-card:hover,
+  .faculty-card:hover,
+  .partner:hover,
+  .env-shot:hover,
+  .photo:hover,
+  .btn:hover,
+  .news-card:hover .news-photo,
+  .faculty-card:hover .faculty-photo,
+  .env-shot:hover img {
+    transform: none;
   }
 }

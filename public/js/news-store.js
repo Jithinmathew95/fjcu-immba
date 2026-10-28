@@ -27,7 +27,31 @@ window.IMMBANews = (function () {
   }
 
   function normalizeList(list) {
-    return (list || []).map((item, index) => normalizeItem(item, index));
+    return (list || []).map((item, index) => normalizeItem(item, index)).filter((item) => item.id);
+  }
+
+  function mergeItem(prev, next) {
+    if (!prev) return next;
+    return {
+      ...prev,
+      ...next,
+      photo: next.photo || prev.photo,
+      link: next.link || prev.link,
+      titleEn: next.titleEn || prev.titleEn,
+      titleZh: next.titleZh || prev.titleZh,
+      bodyEn: next.bodyEn || prev.bodyEn,
+      bodyZh: next.bodyZh || prev.bodyZh
+    };
+  }
+
+  function mergeLists(...lists) {
+    const map = new Map();
+    lists.forEach((list) => {
+      normalizeList(list).forEach((item) => {
+        map.set(item.id, mergeItem(map.get(item.id), item));
+      });
+    });
+    return [...map.values()];
   }
 
   function defaults() {
@@ -53,16 +77,30 @@ window.IMMBANews = (function () {
     return JSON.parse(JSON.stringify(list));
   }
 
+  let remotePublished = null;
+  let remoteDraft = null;
+
   function getDraft() {
-    return normalizeList(load(DRAFT_KEY) || load(PUBLISHED_KEY) || defaults());
+    return mergeLists(defaults(), load(PUBLISHED_KEY), load(DRAFT_KEY), remotePublished, remoteDraft);
   }
 
   function setDraft(list) {
-    save(DRAFT_KEY, list);
+    remoteDraft = normalizeList(list);
+    save(DRAFT_KEY, remoteDraft);
   }
 
   function getPublished() {
-    return normalizeList(load(PUBLISHED_KEY) || defaults());
+    return mergeLists(defaults(), load(PUBLISHED_KEY), remotePublished)
+      .filter((item) => (item.status || "published") === "published");
+  }
+
+  function hydratePublished(list) {
+    remotePublished = normalizeList(list);
+  }
+
+  function hydrateDraft(list) {
+    remoteDraft = normalizeList(list);
+    save(DRAFT_KEY, remoteDraft);
   }
 
   function isDirty() {
@@ -71,13 +109,17 @@ window.IMMBANews = (function () {
 
   function syncToFrontend() {
     const draft = getDraft();
-    save(PUBLISHED_KEY, draft);
+    remotePublished = clone(draft);
+    remoteDraft = clone(draft);
     save(DRAFT_KEY, draft);
+    save(PUBLISHED_KEY, draft);
     return clone(draft);
   }
 
   function restoreDefaults() {
     const list = defaults();
+    remoteDraft = clone(list);
+    remotePublished = clone(list);
     save(DRAFT_KEY, list);
     save(PUBLISHED_KEY, list);
     return clone(list);
@@ -91,5 +133,18 @@ window.IMMBANews = (function () {
     return `${base}-${Date.now().toString(36)}`;
   }
 
-  return { getDraft, setDraft, getPublished, isDirty, syncToFrontend, restoreDefaults, slugify, defaults, normalizeList };
+  return {
+    getDraft,
+    setDraft,
+    getPublished,
+    hydratePublished,
+    hydrateDraft,
+    isDirty,
+    syncToFrontend,
+    restoreDefaults,
+    slugify,
+    defaults,
+    normalizeList,
+    mergeLists
+  };
 })();
