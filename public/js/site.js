@@ -187,6 +187,25 @@
     return lang() === "zh" ? `${y}/${m}/${d}` : `${d} ${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m - 1]} ${y}`;
   }
 
+  function escHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, (ch) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[ch]));
+  }
+
+  function formatBody(text) {
+    return String(text || "")
+      .split(/\n+/)
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .map((part) => `<p>${escHtml(part)}</p>`)
+      .join("");
+  }
+
   function liveNews() {
     if (window.IMMBANews) return window.IMMBANews.getPublished();
     return window.IMMBA.news;
@@ -266,10 +285,10 @@
       : "";
     const photo = n.photo ? `<img class="news-detail-photo" src="${n.photo}" alt="">` : "";
     host.innerHTML = `
-      <p class="meta">${formatDate(n.date)}${tag ? ` · ${tag}` : ""}</p>
-      <h1>${title}</h1>
+      <p class="meta">${formatDate(n.date)}${tag ? ` · ${escHtml(tag)}` : ""}</p>
+      <h1>${escHtml(title)}</h1>
       ${photo}
-      <div class="prose"><p>${body}</p>
+      <div class="prose">${formatBody(body)}
       ${link}
       ${newsSourceHtml()}
       <p><a class="btn btn-line" href="news.html">${zh ? "返回消息列表" : "Back to news"}</a></p></div>`;

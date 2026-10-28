@@ -7,7 +7,21 @@ insert into public.announcements (id, date, link, photo, sort_order, status, tag
 ('intl-info','2026-09-15','admissions.html','',5,'published','Events','活動','International students: get to know Fu Jen imMBA at our info session','你身邊有正在考慮 MBA 的國際學生嗎？','Join an English-language introduction to AACSB-accredited study at Fu Jen, classroom diversity, and the dual-degree options in the United States, France, and Spain.','歡迎參加全英語學程說明，了解 AACSB 認證、課堂國際組成，以及美國、法國、西班牙雙聯學位。'),
 ('ai-product','2026-09-02','faculty.html','',6,'published','Faculty','師資','90 seconds with the professor — AI × Product','90 Seconds with the Professor｜AI × Product','Faculty share how AI is reshaping product development and why managers need both analytical judgement and market sense.','教師分享人工智慧如何改變產品開發，以及管理者為何需要兼具分析判斷與市場 sensemaking。'),
 ('data-analytics','2026-08-26','curriculum.html','assets/environment/md-classrooms.jpg',7,'published','Curriculum','課程','New course spotlight: Data Analytics for International Business','新課介紹｜Data Analytics for International Business','A new elective strengthens quantitative decision-making for cross-border markets, complementing marketing, operations, and strategy.','新選修強化跨國市場的量化決策能力，與行銷、營運與策略課程相互補強。'),
-('ai-digital-product','2026-10-27','curriculum.html','',0,'published','Curriculum','課程','AI-Assisted Digital Product Development: Building Smarter, Faster','AI 輔助數位產品開發：更快、更聰明','Students work with AI-assisted workflows to frame, prototype, and evaluate digital products in an international management context.','課程引導學生以 AI 輔助流程構思、原型與評估數位產品，並置於國際管理情境中思考。'),
+('ai-digital-product','2026-10-27','curriculum.html','https://eicrqictvzytfggaualx.supabase.co/storage/v1/object/public/announcement-photos/ai-digital-product/1793084788063.jpg',0,'published','AI, Product Development, MVP, UX','AI、產品開發、MVP、使用者體驗','AI-Assisted Digital Product Development: Building Smarter, Faster','AI 輔助數位產品開發：更快、更聰明','AI-assisted digital product development uses AI tools across the whole product lifecycle, from early ideas to launch. Teams can now:
+
+Research faster: summarize user feedback and spot needs and patterns in minutes.
+Define clearly: turn ideas into requirements, user stories, and MVP scopes.
+Design and prototype quicker: generate user flows, wireframes, and UI drafts to test early.
+Build with confidence: speed up coding, testing, and documentation.
+
+AI doesn’t replace product thinking. It gives teams more time for the decisions that matter who the users are, what problem to solve, and what to ship first.','AI 輔助數位產品開發,是將 AI 工具運用在產品的整個生命週期,從最初的構想到正式上線。團隊現在可以:
+
+更快完成研究: 在幾分鐘內彙整使用者回饋,找出需求與趨勢。
+更清楚地定義產品: 將想法轉化為需求、使用者故事與 MVP 範圍。
+更快設計與製作原型: 產出使用者流程、線框圖與介面草稿,及早進行測試。
+更有信心地開發: 加速程式開發、測試與文件撰寫。
+
+AI 並不會取代產品思維,而是讓團隊有更多時間專注於真正重要的決策:使用者是誰、要解決什麼問題,以及第一步該推出什麼。'),
 ('iqs-spotlight','2026-07-29','dual-degree.html','',9,'published','Partners','合作','Partner spotlight: IQS School of Management','合作夥伴｜IQS School of Management','IQS in Barcelona is AACSB accredited and offers dual-degree options in international marketing and industrial business management.','位於巴塞隆納的 IQS 具 AACSB 認證，提供國際行銷與工業企業管理等雙聯學位選項。'),
 ('leaders','2026-07-22','about.html','',10,'published','Insight','觀點','What kind of leaders should we cultivate in a rapidly changing world?','當世界快速變動，我們該培養什麼樣的領導者？','The programme’s aim remains practical: develop managers who can work across cultures, technologies, and markets with ethical judgement.','學程目標明確：培養能在文化、科技與市場之間工作、並具備倫理判斷的管理人才。')
 on conflict (id) do update set date = excluded.date, link = excluded.link, photo = excluded.photo, sort_order = excluded.sort_order, status = excluded.status, tag_en = excluded.tag_en, tag_zh = excluded.tag_zh, title_en = excluded.title_en, title_zh = excluded.title_zh, body_en = excluded.body_en, body_zh = excluded.body_zh;

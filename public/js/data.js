@@ -113,14 +113,15 @@ window.IMMBA = {
       id: "ai-digital-product",
       date: "2026-10-27",
       link: "curriculum.html",
+      photo: "https://eicrqictvzytfggaualx.supabase.co/storage/v1/object/public/announcement-photos/ai-digital-product/1793084788063.jpg",
       order: 0,
       status: "published",
-      tagEn: "Curriculum",
-      tagZh: "課程",
+      tagEn: "AI, Product Development, MVP, UX",
+      tagZh: "AI、產品開發、MVP、使用者體驗",
       titleEn: "AI-Assisted Digital Product Development: Building Smarter, Faster",
       titleZh: "AI 輔助數位產品開發：更快、更聰明",
-      bodyEn: "Students work with AI-assisted workflows to frame, prototype, and evaluate digital products in an international management context.",
-      bodyZh: "課程引導學生以 AI 輔助流程構思、原型與評估數位產品，並置於國際管理情境中思考。"
+      bodyEn: "AI-assisted digital product development uses AI tools across the whole product lifecycle, from early ideas to launch. Teams can now:\n\nResearch faster: summarize user feedback and spot needs and patterns in minutes.\nDefine clearly: turn ideas into requirements, user stories, and MVP scopes.\nDesign and prototype quicker: generate user flows, wireframes, and UI drafts to test early.\nBuild with confidence: speed up coding, testing, and documentation.\n\nAI doesn’t replace product thinking. It gives teams more time for the decisions that matter who the users are, what problem to solve, and what to ship first.",
+      bodyZh: "AI 輔助數位產品開發,是將 AI 工具運用在產品的整個生命週期,從最初的構想到正式上線。團隊現在可以:\n\n更快完成研究: 在幾分鐘內彙整使用者回饋,找出需求與趨勢。\n更清楚地定義產品: 將想法轉化為需求、使用者故事與 MVP 範圍。\n更快設計與製作原型: 產出使用者流程、線框圖與介面草稿,及早進行測試。\n更有信心地開發: 加速程式開發、測試與文件撰寫。\n\nAI 並不會取代產品思維,而是讓團隊有更多時間專注於真正重要的決策:使用者是誰、要解決什麼問題,以及第一步該推出什麼。"
     },
     {
       id: "iqs-spotlight",
