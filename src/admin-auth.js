@@ -1,13 +1,10 @@
-import { supabase, supabaseConfigError } from "./lib/supabaseClient.js";
 import { fetchAllAnnouncements, replaceAllAnnouncements } from "./lib/newsApi.js";
+import { requireStaff, signOut, supabase } from "./lib/auth.js";
 
-const loginSection = document.querySelector("[data-admin-login]");
 const office = document.querySelector("[data-admin-office]");
-const form = document.querySelector("[data-login-form]");
-const status = document.querySelector("[data-login-status]");
+const status = document.querySelector("[data-admin-status]");
 const sessionBar = document.querySelector("[data-admin-session]");
 const emailLabel = document.querySelector("[data-admin-email]");
-const submitBtn = document.querySelector("[data-login-submit]");
 
 function setVisible(el, visible) {
   if (!el) return;
@@ -24,7 +21,6 @@ function setLoginStatus(message, kind) {
 }
 
 function showOffice(user) {
-  setVisible(loginSection, false);
   setVisible(office, true);
   setVisible(sessionBar, true);
   if (emailLabel) emailLabel.textContent = user.email || "Signed in";
@@ -52,69 +48,13 @@ async function loadOfficeNews() {
   }
 }
 
-function showLogin() {
-  setVisible(loginSection, true);
-  setVisible(office, false);
-  setVisible(sessionBar, false);
-  if (emailLabel) emailLabel.textContent = "";
-}
-
-form?.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (!supabase) {
-    setLoginStatus(supabaseConfigError, "error");
-    return;
-  }
-  const email = form.elements.email.value.trim();
-  const password = form.elements.password.value;
-  if (!email || !password) {
-    setLoginStatus("Enter your email and password.", "error");
-    return;
-  }
-  if (submitBtn) submitBtn.disabled = true;
-  setLoginStatus("Signing in…");
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (submitBtn) submitBtn.disabled = false;
-  if (error) {
-    setLoginStatus(error.message || "Could not sign in.", "error");
-    return;
-  }
-  form.reset();
-  setLoginStatus("");
-});
-
 document.querySelector("[data-logout]")?.addEventListener("click", async () => {
-  if (!supabase) return;
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    setLoginStatus(error.message || "Could not sign out.", "error");
-    return;
-  }
-  showLogin();
-  setLoginStatus("Signed out.");
+  await signOut();
+  window.location.replace("admin-login.html");
 });
 
-if (!supabase) {
-  showLogin();
-  setLoginStatus(supabaseConfigError, "error");
-} else {
-  supabase.auth.onAuthStateChange((_event, session) => {
-    if (session?.user) {
-      showOffice(session.user);
-      setLoginStatus("");
-      loadOfficeNews();
-    } else {
-      showLogin();
-    }
-  });
-
-  const { data, error } = await supabase.auth.getSession();
-  if (error) {
-    showLogin();
-    setLoginStatus(error.message || "Could not check the current session.", "error");
-  } else if (data.session?.user) {
-    showOffice(data.session.user);
-  } else {
-    showLogin();
-  }
+const profile = await requireStaff();
+if (profile) {
+  showOffice(profile.user);
+  await loadOfficeNews();
 }

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin | imMBA Fu Jen</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="admin">
+  <main id="main">
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="kicker" style="color:var(--gold)">Back-office</p>
+        <h1 data-en>Staff home</h1>
+        <h1 data-zh>同仁後台</h1>
+        <p class="lede">
+          <span data-en>Signed in as</span>
+          <span data-zh>登入身分</span>
+          <strong data-admin-email></strong>
+          · <span data-admin-role></span>
+          <button type="button" class="btn btn-line" data-logout>
+            <span data-en>Sign out</span>
+            <span data-zh>登出</span>
+          </button>
+        </p>
+        <p class="status hidden" data-admin-status hidden></p>
+      </div>
+    </header>
+    <section class="section hidden" data-staff-links hidden>
+      <div class="wrap grid-4 admin-crud">
+        <a class="card" href="admin-faculty.html">
+          <p class="meta">AdminFaculty</p>
+          <h3 data-en>Faculty cabinet</h3>
+          <h3 data-zh>師資櫃</h3>
+          <p data-en>Add, edit, reorder, and photograph faculty.</p>
+          <p data-zh>新增、編輯、排序與上傳師資照片。</p>
+        </a>
+        <a class="card" href="admin-news.html">
+          <p class="meta">AdminNews</p>
+          <h3 data-en>Announcements</h3>
+          <h3 data-zh>最新消息</h3>
+          <p data-en>Create and publish news for the public site.</p>
+          <p data-zh>新增並發布前台消息。</p>
+        </a>
+        <a class="card hidden" href="admin-approve.html" data-super-only hidden>
+          <p class="meta">Approve</p>
+          <h3 data-en>Approve administrators</h3>
+          <h3 data-zh>核准管理員</h3>
+          <p data-en>Change pending accounts to admin, super admin, or rejected.</p>
+          <p data-zh>將待審核帳號改為管理員、超級管理員或拒絕。</p>
+        </a>
+      </div>
+    </section>
+    <section class="section hidden" data-pending-box hidden>
+      <div class="wrap card">
+        <h2 data-en>Waiting for approval</h2>
+        <h2 data-zh>等待核准</h2>
+        <p data-en>Your account is pending. A super admin must approve you before you can edit Faculty or News.</p>
+        <p data-zh>您的帳號尚待核准。需由超級管理員通過後，才能編輯師資或消息。</p>
+      </div>
+    </section>
+    <section class="section hidden" data-rejected-box hidden>
+      <div class="wrap card">
+        <h2 data-en>Access rejected</h2>
+        <h2 data-zh>申請未通過</h2>
+        <p data-en>This account cannot use the back-office. Ask the course instructor if that is a mistake.</p>
+        <p data-zh>此帳號無法使用後台。若有疑問請洽課程教師。</p>
+      </div>
+    </section>
+  </main>
+  <script src="/js/data.js?v=20261116a"></script>
+  <script src="/js/site.js?v=20261116a"></script>
+  <script type="module" src="/src/admin-home.js"></script>
+</body>
+</html>

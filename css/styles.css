@@ -711,7 +711,34 @@ h1 {
 .search-row {
   display: flex;
   gap: 10px;
-  margin-bottom: 28px;
+  margin-bottom: 16px;
+}
+
+.faculty-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.faculty-filters .is-active {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+
+.admin-auth-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.admin-thumb {
+  width: 48px;
+  height: 60px;
+  object-fit: cover;
+  background: #eee;
 }
 
 .search-row input,

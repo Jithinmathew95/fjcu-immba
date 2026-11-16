@@ -20,6 +20,12 @@
         <div class="search-row">
           <input data-faculty-search type="search" placeholder="Search by name or specialty">
         </div>
+        <div class="faculty-filters" data-faculty-filters>
+          <button type="button" class="btn btn-line is-active" data-faculty-filter="all">All</button>
+          <button type="button" class="btn btn-line" data-faculty-filter="full-time">Full-Time</button>
+          <button type="button" class="btn btn-line" data-faculty-filter="part-time">Part-Time</button>
+        </div>
+        <p class="status hidden" data-faculty-status hidden></p>
       </div>
     </header>
     <section class="section">
@@ -32,8 +38,8 @@
       </p>
     </section>
   </main>
-  <script src="/js/data.js?v=20261028c"></script>
-  <script src="/js/site.js?v=20261028c"></script>
-  <script type="module" src="/src/main.js"></script>
+  <script src="/js/data.js?v=20261116a"></script>
+  <script src="/js/site.js?v=20261116a"></script>
+  <script type="module" src="/src/faculty.js"></script>
 </body>
 </html>

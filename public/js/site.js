@@ -43,10 +43,10 @@
       <header class="site-header">
         <div class="brand-bar">
           <div class="brand">
-            <a class="logo-link" href="admin-news.html">
+            <a class="logo-link" href="admin.html">
               <img class="logo" src="assets/fjcu-logo.svg?v=3" width="64" height="64" alt="">
-              <span class="visually-hidden" data-en>AdminNews back-office</span>
-              <span class="visually-hidden" data-zh>消息後台</span>
+              <span class="visually-hidden" data-en>Staff back-office</span>
+              <span class="visually-hidden" data-zh>同仁後台</span>
             </a>
             <a class="brand-text" href="index.html">
               <span class="brand-university" data-en>Fu Jen Catholic University</span>
@@ -295,32 +295,7 @@
   }
 
   function renderFaculty() {
-    const host = document.querySelector("[data-faculty]");
-    if (!host) return;
-    const q = (document.querySelector("[data-faculty-search]")?.value || "").trim().toLowerCase();
-    const zh = lang() === "zh";
-    const items = window.IMMBA.faculty.filter((f) => {
-      if (!q) return true;
-      return `${f.name} ${f.nameZh} ${f.specEn} ${f.specZh} ${f.roleEn}`.toLowerCase().includes(q);
-    });
-    host.innerHTML = items.map((f) => {
-      const name = zh ? f.nameZh : f.name;
-      const photo = f.photo
-        ? `<img class="faculty-photo" src="${f.photo}" alt="${name}" width="160" height="200">`
-        : "";
-      return `
-      <article class="faculty-card">
-        ${photo}
-        <div class="faculty-copy">
-          <h3>${name}</h3>
-          <p>${zh ? f.roleZh : f.roleEn}</p>
-          <p>${zh ? f.eduZh : f.eduEn}</p>
-          <p>${zh ? f.specZh : f.specEn}</p>
-          ${f.tel ? `<p>${f.tel}</p>` : ""}
-          <p><a href="mailto:${f.email}">${f.email}</a>${f.web ? ` · <a href="${f.web}" target="_blank" rel="noreferrer">Website</a>` : ""}</p>
-        </div>
-      </article>`;
-    }).join("");
+    // Faculty cards come from Supabase in src/faculty.js. Do not fall back to data.js.
   }
 
   function renderHomeNews() {

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin sign-in | imMBA Fu Jen</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="admin-login">
+  <main id="main">
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="kicker" style="color:var(--gold)">Back-office</p>
+        <h1 data-en>Staff sign-in</h1>
+        <h1 data-zh>同仁登入</h1>
+        <p class="lede" data-en>Register for a pending account, then wait for a super admin to approve you before you can edit Faculty or News.</p>
+        <p class="lede" data-zh>先註冊為待審核帳號，經超級管理員核准後，才能編輯師資或消息。</p>
+      </div>
+    </header>
+    <section class="section">
+      <div class="wrap">
+        <div class="admin-login">
+          <p class="status hidden" data-login-status hidden></p>
+          <form class="form card" data-login-form data-auth-panel="login">
+            <h2 data-en>Sign in</h2>
+            <h2 data-zh>登入</h2>
+            <label>
+              <span data-en>Email</span>
+              <span data-zh>電子郵件</span>
+              <input name="email" type="email" autocomplete="username" required>
+            </label>
+            <label>
+              <span data-en>Password</span>
+              <span data-zh>密碼</span>
+              <input name="password" type="password" autocomplete="current-password" required>
+            </label>
+            <button class="btn btn-navy" type="submit">
+              <span data-en>Sign in</span>
+              <span data-zh>登入</span>
+            </button>
+            <p class="admin-auth-links">
+              <button type="button" class="btn btn-line" data-auth-show="register">Register</button>
+              <button type="button" class="btn btn-line" data-auth-show="forgot">Forgot password</button>
+            </p>
+          </form>
+          <form class="form card hidden" data-register-form data-auth-panel="register" hidden>
+            <h2 data-en>Register</h2>
+            <h2 data-zh>註冊</h2>
+            <label>
+              <span data-en>Email</span>
+              <span data-zh>電子郵件</span>
+              <input name="email" type="email" autocomplete="email" required>
+            </label>
+            <label>
+              <span data-en>Password</span>
+              <span data-zh>密碼</span>
+              <input name="password" type="password" autocomplete="new-password" required minlength="8">
+            </label>
+            <label>
+              <span data-en>Confirm password</span>
+              <span data-zh>確認密碼</span>
+              <input name="confirm" type="password" autocomplete="new-password" required minlength="8">
+            </label>
+            <button class="btn btn-navy" type="submit">
+              <span data-en>Create pending account</span>
+              <span data-zh>建立待審核帳號</span>
+            </button>
+            <p><button type="button" class="btn btn-line" data-auth-show="login">Back to sign-in</button></p>
+          </form>
+          <form class="form card hidden" data-forgot-form data-auth-panel="forgot" hidden>
+            <h2 data-en>Forgot password</h2>
+            <h2 data-zh>忘記密碼</h2>
+            <label>
+              <span data-en>Email</span>
+              <span data-zh>電子郵件</span>
+              <input name="email" type="email" required>
+            </label>
+            <button class="btn btn-navy" type="submit">
+              <span data-en>Send reset email</span>
+              <span data-zh>寄送重設信件</span>
+            </button>
+            <p><button type="button" class="btn btn-line" data-auth-show="login">Back to sign-in</button></p>
+          </form>
+          <form class="form card hidden" data-reset-form data-auth-panel="reset" hidden>
+            <h2 data-en>Set a new password</h2>
+            <h2 data-zh>設定新密碼</h2>
+            <label>
+              <span data-en>New password</span>
+              <span data-zh>新密碼</span>
+              <input name="password" type="password" autocomplete="new-password" required minlength="8">
+            </label>
+            <label>
+              <span data-en>Confirm password</span>
+              <span data-zh>確認密碼</span>
+              <input name="confirm" type="password" autocomplete="new-password" required minlength="8">
+            </label>
+            <button class="btn btn-navy" type="submit">
+              <span data-en>Update password</span>
+              <span data-zh>更新密碼</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="/js/data.js?v=20261116a"></script>
+  <script src="/js/site.js?v=20261116a"></script>
+  <script type="module" src="/src/admin-login.js"></script>
+</body>
+</html>

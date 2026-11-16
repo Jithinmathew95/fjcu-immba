@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Approve administrators | imMBA Fu Jen</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="admin-approve">
+  <main id="main">
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="kicker" style="color:var(--gold)">Back-office · Approve</p>
+        <h1 data-en>Approve administrators</h1>
+        <h1 data-zh>核准管理員</h1>
+        <p class="lede">
+          <a class="link-internal" href="admin.html">Admin home</a>
+          ·
+          <span data-en>Signed in as</span>
+          <strong data-admin-email></strong>
+          <button type="button" class="btn btn-line" data-logout>Sign out</button>
+        </p>
+        <p class="status hidden" data-admin-status hidden></p>
+      </div>
+    </header>
+    <section class="section">
+      <div class="wrap">
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody data-approve-table></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="/js/data.js?v=20261116a"></script>
+  <script src="/js/site.js?v=20261116a"></script>
+  <script type="module" src="/src/admin-approve.js"></script>
+</body>
+</html>
