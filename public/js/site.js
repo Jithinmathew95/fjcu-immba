@@ -81,13 +81,18 @@
                   </ul>
                 </li>
                 <li><a data-nav-link="faculty" href="faculty.html"><span data-en>Faculty</span><span data-zh>師資介紹</span></a></li>
-                <li><a data-nav-link="guide" href="guide.html"><span data-en>imMBA Guide</span><span data-zh>就學指引</span></a></li>
-                <li><a data-nav-link="graduation" href="graduation.html"><span data-en>Graduation</span><span data-zh>畢業規定</span></a></li>
                 <li><a data-nav-link="dual" href="dual-degree.html"><span data-en>Dual Degree</span><span data-zh>雙聯學位</span></a></li>
-                <li><a data-nav-link="exchange" href="exchange.html"><span data-en>Overseas Exchange</span><span data-zh>海外交換</span></a></li>
                 <li><a data-nav-link="marketplace" href="marketplace.html"><span data-en>Marketplace</span><span data-zh>教材市集</span></a></li>
-                <li><a data-nav-link="events" href="events.html"><span data-en>Events</span><span data-zh>活動</span></a></li>
-                <li><a data-nav-link="downloads" href="downloads.html"><span data-en>Downloads</span><span data-zh>檔案下載</span></a></li>
+                <li class="has-sub">
+                  <a data-nav-link="more" href="guide.html"><span data-en>More</span><span data-zh>更多</span></a>
+                  <ul class="submenu">
+                    <li><a data-nav-link="guide" href="guide.html"><span data-en>imMBA Guide</span><span data-zh>就學指引</span></a></li>
+                    <li><a data-nav-link="graduation" href="graduation.html"><span data-en>Graduation</span><span data-zh>畢業規定</span></a></li>
+                    <li><a data-nav-link="exchange" href="exchange.html"><span data-en>Overseas Exchange</span><span data-zh>海外交換</span></a></li>
+                    <li><a data-nav-link="events" href="events.html"><span data-en>Events</span><span data-zh>活動</span></a></li>
+                    <li><a data-nav-link="downloads" href="downloads.html"><span data-en>Downloads</span><span data-zh>檔案下載</span></a></li>
+                  </ul>
+                </li>
               </ul>
             </nav>
             <div class="nav-actions">
@@ -368,6 +373,9 @@
   }
   if (page === "curriculum") {
     document.querySelector('[data-nav-link="requirements"]')?.classList.add("active");
+  }
+  if (["guide", "graduation", "exchange", "events", "downloads"].includes(page)) {
+    document.querySelector('[data-nav-link="more"]')?.classList.add("active");
   }
 
   setLang(localStorage.getItem(STORAGE) || "en");

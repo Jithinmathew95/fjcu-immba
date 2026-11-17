@@ -273,7 +273,7 @@ body.nav-collapsed [data-nav] {
 }
 
 .nav-bar-inner nav {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -302,7 +302,8 @@ body.nav-collapsed [data-nav] {
 
 nav ul {
   display: flex;
-  gap: 0 8px;
+  flex-direction: row;
+  gap: 0 10px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -310,9 +311,13 @@ nav ul {
   align-items: center;
 }
 
+.nav-bar-inner > nav > ul > li {
+  flex: 0 0 auto;
+}
+
 nav a {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: normal;
   color: #e7eef4;
@@ -887,7 +892,7 @@ h1 {
 
 .faculty-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 
