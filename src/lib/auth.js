@@ -21,11 +21,102 @@ export async function getProfile() {
   if (!user) return null;
   const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
   if (error) throw error;
-  return data ? { ...data, user } : { id: user.id, email: user.email, role: "pending", user };
+  return data
+    ? { ...data, user }
+    : { id: user.id, email: user.email, role: "pending", is_buyer: true, is_seller: false, is_platform_admin: false, user };
 }
 
 export function isStaffRole(role) {
   return role === "admin" || role === "super_admin";
+}
+
+export function isBuyer(profile) {
+  return Boolean(profile?.user) && profile?.is_buyer !== false;
+}
+
+export function isSeller(profile) {
+  return Boolean(profile?.is_seller);
+}
+
+export function isPlatformAdmin(profile) {
+  return Boolean(profile?.is_platform_admin) || profile?.role === "super_admin";
+}
+
+export function safeNextPath(value, fallback = "admin.html") {
+  if (!value || typeof value !== "string") return fallback;
+  if (value.includes("://") || value.startsWith("//") || value.includes("\\")) return fallback;
+  if (value.startsWith("/") || value.startsWith(".")) return fallback;
+  const [path, query] = value.split("?");
+  if (!path.endsWith(".html")) return fallback;
+  if (!query) return path;
+  if (path === "marketplace.html" && /^id=[0-9a-f-]{36}$/i.test(query)) return `${path}?${query}`;
+  if (path === "marketplace-checkout.html" && /^order=[0-9a-f-]{36}$/i.test(query)) return `${path}?${query}`;
+  if (path === "marketplace-orders.html" && /^id=[0-9a-f-]{36}$/i.test(query)) return `${path}?${query}`;
+  if (path === "marketplace-sales.html" && /^id=[0-9a-f-]{36}$/i.test(query)) return `${path}?${query}`;
+  return fallback;
+}
+
+export function loginHref(nextPath) {
+  const next = safeNextPath(nextPath, "marketplace-account.html");
+  return `admin-login.html?next=${encodeURIComponent(next)}`;
+}
+
+async function requireSignedIn(nextPath) {
+  if (!supabase) {
+    window.location.replace(loginHref(nextPath));
+    return null;
+  }
+  const profile = await getProfile();
+  if (!profile?.user) {
+    window.location.replace(loginHref(nextPath));
+    return null;
+  }
+  return profile;
+}
+
+export async function requireBuyer(nextPath = "marketplace-cart.html") {
+  const profile = await requireSignedIn(nextPath);
+  if (!profile) return null;
+  if (!isBuyer(profile)) {
+    window.location.replace("marketplace-account.html");
+    return null;
+  }
+  return profile;
+}
+
+export async function requireSeller(nextPath = "marketplace-seller.html") {
+  const profile = await requireSignedIn(nextPath);
+  if (!profile) return null;
+  if (!isSeller(profile) && !isPlatformAdmin(profile)) {
+    window.location.replace("marketplace-account.html");
+    return null;
+  }
+  return profile;
+}
+
+export async function requirePlatformAdmin(nextPath = "marketplace-admin.html") {
+  const profile = await requireSignedIn(nextPath);
+  if (!profile) return null;
+  if (!isPlatformAdmin(profile)) {
+    window.location.replace("marketplace-account.html");
+    return null;
+  }
+  return profile;
+}
+
+export async function becomeMarketplaceSeller() {
+  const { error } = await supabase.rpc("become_marketplace_seller");
+  if (error) throw error;
+}
+
+export async function setMarketplaceFlags(id, flags) {
+  const { error } = await supabase.rpc("set_marketplace_flags", {
+    p_user_id: id,
+    p_is_buyer: flags.isBuyer,
+    p_is_seller: flags.isSeller,
+    p_is_platform_admin: flags.isPlatformAdmin,
+  });
+  if (error) throw error;
 }
 
 export async function requireStaff({ pendingHref = "admin.html" } = {}) {

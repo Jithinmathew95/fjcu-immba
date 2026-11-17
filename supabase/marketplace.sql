@@ -1,0 +1,8 @@
+-- Marketplace roles reuse public.profiles (same Auth users as Faculty/News).
+-- Faculty `role` stays pending|admin|super_admin|rejected.
+-- A user can be a buyer and a seller at the same time.
+-- See applied migration marketplace_roles_and_orders on project ehcgblmjodpnqlnstyqb.
+-- place_marketplace_order decrements stock atomically (stock >= 0 check; cannot oversell).
+-- marketplace_products.seller_label is copied from the seller profile for guest browse.
+-- place_marketplace_order locks the cart, writes order_code, and decrements stock only when enough remains.
+-- Item fulfillment_status: waiting_payment → ready_to_ship → shipped → completed (no skips). Events are logged.

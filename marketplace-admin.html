@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marketplace admin | imMBA Fu Jen</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="marketplace">
+  <main id="main">
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="kicker" style="color:var(--gold)">Marketplace</p>
+        <h1 data-en>Platform administrator</h1>
+        <h1 data-zh>平台管理員</h1>
+        <p class="lede" data-en>Monitor users, products, and transactions. Only an existing administrator can grant this role.</p>
+        <p class="lede" data-zh>監看使用者、商品與交易。僅現有管理員可授予此角色。</p>
+        <div data-market-chrome></div>
+        <p class="status hidden" data-market-status hidden></p>
+      </div>
+    </header>
+    <section class="section">
+      <div class="wrap">
+        <h2 data-en>Users</h2>
+        <h2 data-zh>使用者</h2>
+        <div data-admin-users></div>
+        <h2 data-en>All products</h2>
+        <h2 data-zh>全部商品</h2>
+        <div data-admin-products></div>
+        <h2 data-en>Transactions</h2>
+        <h2 data-zh>交易</h2>
+        <div class="admin-toolbar">
+          <input data-order-search type="search" placeholder="Search orders, buyers, titles">
+          <select data-order-status>
+            <option value="">All statuses</option>
+            <option value="pending_payment">Waiting for Payment</option>
+            <option value="paid">Ready to Ship</option>
+            <option value="shipped">Shipped</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div data-admin-orders></div>
+      </div>
+    </section>
+  </main>
+  <script src="/js/data.js?v=20261116a"></script>
+  <script src="/js/site.js?v=20261116a"></script>
+  <script type="module" src="/src/marketplace-admin.js"></script>
+</body>
+</html>

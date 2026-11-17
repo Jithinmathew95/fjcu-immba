@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seller | imMBA Fu Jen</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="marketplace">
+  <main id="main">
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="kicker" style="color:var(--gold)">Marketplace</p>
+        <h1 data-en>Seller cabinet</h1>
+        <h1 data-zh>賣家後台</h1>
+        <p class="lede" data-en>Manage only your own inventory: quantities, prices, and listing status. Buyers cannot order more than available stock.</p>
+        <p class="lede" data-zh>僅能管理自己的庫存：數量、價格與刊登狀態。買家不能購買超過可售數量。</p>
+        <div data-market-chrome></div>
+        <p>
+          <a class="btn btn-gold" href="marketplace-add-product.html">
+            <span data-en>Add Product</span>
+            <span data-zh>新增商品</span>
+          </a>
+          <button type="button" class="btn btn-line" data-hide-unavailable>
+            <span data-en>Hide out-of-stock</span>
+            <span data-zh>隱藏缺貨商品</span>
+          </button>
+        </p>
+        <p class="status hidden" data-market-status hidden></p>
+      </div>
+    </header>
+    <section class="section">
+      <div class="wrap">
+        <h2 data-en>Inventory</h2>
+        <h2 data-zh>庫存管理</h2>
+        <div data-inventory-summary></div>
+        <div data-seller-products></div>
+      </div>
+    </section>
+    <section class="section alt">
+      <div class="wrap">
+        <h2 data-en>Order status</h2>
+        <h2 data-zh>訂單狀態</h2>
+        <p>
+          <a class="btn btn-navy" href="marketplace-sales.html">
+            <span data-en>My Sales / Orders</span>
+            <span data-zh>我的銷售／訂單</span>
+          </a>
+          <a class="btn btn-line" href="marketplace-accounting.html">
+            <span data-en>Accounting dashboard</span>
+            <span data-zh>銷售報表</span>
+          </a>
+        </p>
+        <p class="lede" data-en>Process only your own sales, in order: Waiting for Payment → Ready to Ship → Shipped. The buyer confirms delivery to mark Completed.</p>
+        <p class="lede" data-zh>僅處理自己的訂單，順序為：待付款 → 待出貨 → 已出貨。買家確認收貨後才會完成。</p>
+        <h3 data-en>Waiting for Payment</h3>
+        <h3 data-zh>待付款</h3>
+        <div data-seller-waiting></div>
+        <h3 data-en>Ready to Ship</h3>
+        <h3 data-zh>待出貨</h3>
+        <div data-seller-ready></div>
+        <h3 data-en>Shipped</h3>
+        <h3 data-zh>已出貨</h3>
+        <div data-seller-shipped></div>
+        <h3 data-en>Completed</h3>
+        <h3 data-zh>已完成</h3>
+        <div data-seller-completed></div>
+      </div>
+    </section>
+  </main>
+  <script src="/js/data.js?v=20261116a"></script>
+  <script src="/js/site.js?v=20261116a"></script>
+  <script type="module" src="/src/marketplace-seller.js"></script>
+</body>
+</html>

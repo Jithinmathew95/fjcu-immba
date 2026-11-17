@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seller Accounting | imMBA Fu Jen</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="marketplace">
+  <main id="main">
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="kicker" style="color:var(--gold)">Marketplace</p>
+        <h1 data-en>Seller accounting</h1>
+        <h1 data-zh>賣家帳務</h1>
+        <p class="lede" data-en>Only your own sales appear here. Monthly revenue counts completed transactions only and updates when an order is completed.</p>
+        <p class="lede" data-zh>僅顯示您自己的銷售。月營收只計算已完成交易，訂單完成後會自動更新。</p>
+        <div data-market-chrome></div>
+        <p class="status hidden" data-market-status hidden></p>
+      </div>
+    </header>
+    <section class="section">
+      <div class="wrap">
+        <form class="admin-toolbar market-browse-bar" data-accounting-filters>
+          <label>
+            <span data-en>Select Month</span>
+            <span data-zh>選擇月份</span>
+            <select name="month" data-month></select>
+          </label>
+          <label>
+            <span data-en>Transaction Status</span>
+            <span data-zh>交易狀態</span>
+            <select name="status" data-status>
+              <option value="">All statuses</option>
+              <option value="waiting_payment">Waiting for Payment</option>
+              <option value="ready_to_ship">Ready to Ship</option>
+              <option value="shipped">Shipped</option>
+              <option value="completed">Completed</option>
+            </select>
+          </label>
+          <label>
+            <span data-en>Search by Order ID</span>
+            <span data-zh>依訂單編號搜尋</span>
+            <input name="q" type="search" data-order-q placeholder="Order ID">
+          </label>
+        </form>
+        <div class="stats-grid market-stats" data-summary></div>
+        <article class="card market-chart-card">
+          <p class="meta" data-en>Monthly sales</p>
+          <p class="meta" data-zh>每月銷售</p>
+          <h2 data-en>Completed sales revenue</h2>
+          <h2 data-zh>已完成銷售營收</h2>
+          <p class="lede" data-en>Bars are NT$ totals from completed transactions in each month. Empty months stay at zero.</p>
+          <p class="lede" data-zh>柱狀圖為各月已完成交易金額。沒有交易的月份為零。</p>
+          <div data-chart></div>
+        </article>
+      </div>
+    </section>
+    <section class="section alt">
+      <div class="wrap">
+        <h2 data-en>Sales history</h2>
+        <h2 data-zh>銷售紀錄</h2>
+        <div data-history></div>
+      </div>
+    </section>
+  </main>
+  <script src="/js/data.js?v=20261116a"></script>
+  <script src="/js/site.js?v=20261116a"></script>
+  <script type="module" src="/src/marketplace-accounting.js"></script>
+</body>
+</html>

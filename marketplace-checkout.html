@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout | imMBA Fu Jen</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="marketplace">
+  <main id="main">
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="kicker" style="color:var(--gold)">Marketplace</p>
+        <h1 data-en>Checkout</h1>
+        <h1 data-zh>結帳</h1>
+        <p class="lede" data-en>Review quantities and prices, then place the order. Stock is checked when you confirm.</p>
+        <p class="lede" data-zh>請確認數量與價格後下單。系統會在成立訂單時檢查庫存。</p>
+        <div data-market-chrome></div>
+        <p class="status hidden" data-market-status hidden></p>
+      </div>
+    </header>
+    <section class="section">
+      <div class="wrap" data-checkout></div>
+    </section>
+  </main>
+  <script src="/js/data.js?v=20261116a"></script>
+  <script src="/js/site.js?v=20261116a"></script>
+  <script type="module" src="/src/marketplace-checkout.js"></script>
+</body>
+</html>

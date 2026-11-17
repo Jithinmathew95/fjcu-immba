@@ -2,11 +2,16 @@ import {
   supabase,
   supabaseConfigError,
   getSessionUser,
+  safeNextPath,
   signIn,
   signUp,
   requestPasswordReset,
   updatePassword,
 } from "./lib/auth.js";
+
+function afterSignInPath() {
+  return safeNextPath(new URLSearchParams(window.location.search).get("next"), "admin.html");
+}
 
 const status = document.querySelector("[data-login-status]");
 const loginForm = document.querySelector("[data-login-form]");
@@ -43,7 +48,7 @@ loginForm?.addEventListener("submit", async (event) => {
   try {
     setStatus("Signing in…");
     await signIn(email, password);
-    window.location.replace("admin.html");
+    window.location.replace(afterSignInPath());
   } catch (err) {
     setStatus(err.message || "Could not sign in.", "error");
   }
@@ -107,7 +112,7 @@ if (!supabase) {
   } else {
     const user = await getSessionUser();
     if (user && hash.get("type") !== "recovery") {
-      window.location.replace("admin.html");
+      window.location.replace(afterSignInPath());
     }
   }
 }

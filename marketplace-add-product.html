@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Product | imMBA Fu Jen</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="marketplace">
+  <main id="main">
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="kicker" style="color:var(--gold)">Marketplace</p>
+        <h1 data-en>Add Product</h1>
+        <h1 data-zh>新增商品</h1>
+        <p class="lede" data-en>Only your seller account can create this listing. Active products appear on the buyer browse page immediately.</p>
+        <p class="lede" data-zh>僅能以您的賣家帳號刊登。狀態為上架的商品會立刻出現在買家瀏覽頁。</p>
+        <div data-market-chrome></div>
+        <p class="status hidden" data-market-status hidden></p>
+      </div>
+    </header>
+    <section class="section">
+      <div class="wrap admin-login">
+        <form class="form card" data-add-product-form>
+          <input type="hidden" name="id">
+          <label>
+            <span data-en>Product Name</span>
+            <span data-zh>商品名稱</span>
+            <input name="title" required maxlength="120">
+          </label>
+          <label>
+            <span data-en>Category</span>
+            <span data-zh>類別</span>
+            <select name="category" required>
+              <option value="textbooks">Textbooks</option>
+              <option value="course-packs">Course packs</option>
+              <option value="notes">Notes</option>
+              <option value="stationery">Stationery</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+          <label>
+            <span data-en>Description</span>
+            <span data-zh>說明</span>
+            <textarea name="description" rows="4" required></textarea>
+          </label>
+          <label>
+            <span data-en>Price (NT$)</span>
+            <span data-zh>價格（新臺幣）</span>
+            <input name="price" type="number" min="0" step="1" value="100" required>
+          </label>
+          <label>
+            <span data-en>Available Quantity</span>
+            <span data-zh>可售數量</span>
+            <input name="stock" type="number" min="0" step="1" value="1" required>
+          </label>
+          <label>
+            <span data-en>Product Image</span>
+            <span data-zh>商品圖片</span>
+            <input name="photo" type="file" accept="image/jpeg,image/png,image/webp">
+          </label>
+          <p class="market-photo-preview hidden" data-photo-preview hidden><img alt=""></p>
+          <label>
+            <span data-en>Listing Status</span>
+            <span data-zh>刊登狀態</span>
+            <select name="status" required>
+              <option value="active">Active</option>
+              <option value="hidden">Hidden</option>
+            </select>
+          </label>
+          <p>
+            <button class="btn btn-navy" type="submit" data-submit-label>
+              <span data-en>Add Product</span>
+              <span data-zh>新增商品</span>
+            </button>
+            <a class="btn btn-line" href="marketplace-seller.html">
+              <span data-en>Back to seller cabinet</span>
+              <span data-zh>返回賣家後台</span>
+            </a>
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <script src="/js/data.js?v=20261116a"></script>
+  <script src="/js/site.js?v=20261116a"></script>
+  <script type="module" src="/src/marketplace-add-product.js"></script>
+</body>
+</html>
