@@ -22,21 +22,43 @@
           ·
           <span data-en>Signed in as</span>
           <strong data-admin-email></strong>
-          <button type="button" class="btn btn-line" data-logout>Sign out</button>
+          <button type="button" class="btn btn-line" data-logout>
+            <span data-en>Sign out</span>
+            <span data-zh>登出</span>
+          </button>
         </p>
         <p class="status hidden" data-admin-status hidden></p>
       </div>
     </header>
     <section class="section">
       <div class="wrap">
+        <form class="admin-toolbar market-browse-bar" data-approve-filters>
+          <label>
+            <span data-en>Filter</span>
+            <span data-zh>篩選</span>
+            <select name="role" data-approve-filter>
+              <option value="pending">Pending</option>
+              <option value="admin">Admin</option>
+              <option value="rejected">Rejected</option>
+              <option value="all">All</option>
+            </select>
+          </label>
+          <label>
+            <span data-en>Search email</span>
+            <span data-zh>搜尋電子郵件</span>
+            <input name="q" type="search" data-approve-search placeholder="Email">
+          </label>
+        </form>
+        <p class="lede" data-en>Marketplace buyers also start as pending. Use the filter and search so they are not mixed with staff requests.</p>
+        <p class="lede" data-zh>市集買家註冊後也會是待審核。請用篩選與搜尋，避免與後台申請混在一起。</p>
         <div class="admin-table-wrap">
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Created</th>
-                <th>Actions</th>
+                <th><span data-en>Email</span><span data-zh>電子郵件</span></th>
+                <th><span data-en>Role</span><span data-zh>角色</span></th>
+                <th><span data-en>Sign-up date</span><span data-zh>註冊日期</span></th>
+                <th><span data-en>Actions</span><span data-zh>操作</span></th>
               </tr>
             </thead>
             <tbody data-approve-table></tbody>

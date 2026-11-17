@@ -36,15 +36,24 @@
             <label>
               <span data-en>Password</span>
               <span data-zh>密碼</span>
-              <input name="password" type="password" autocomplete="current-password" required>
+              <span class="password-field">
+                <input name="password" type="password" autocomplete="current-password" required>
+                <button type="button" class="password-toggle" data-password-toggle aria-label="Show password" aria-pressed="false"></button>
+              </span>
             </label>
             <button class="btn btn-navy" type="submit">
               <span data-en>Sign in</span>
               <span data-zh>登入</span>
             </button>
             <p class="admin-auth-links">
-              <button type="button" class="btn btn-line" data-auth-show="register">Register</button>
-              <button type="button" class="btn btn-line" data-auth-show="forgot">Forgot password</button>
+              <button type="button" class="btn btn-line" data-auth-show="register">
+                <span data-en>Register</span>
+                <span data-zh>註冊</span>
+              </button>
+              <button type="button" class="btn btn-line" data-auth-show="forgot">
+                <span data-en>Forgot password</span>
+                <span data-zh>忘記密碼</span>
+              </button>
             </p>
           </form>
           <form class="form card hidden" data-register-form data-auth-panel="register" hidden>
@@ -58,18 +67,29 @@
             <label>
               <span data-en>Password</span>
               <span data-zh>密碼</span>
-              <input name="password" type="password" autocomplete="new-password" required minlength="8">
+              <span class="password-field">
+                <input name="password" type="password" autocomplete="new-password" required minlength="8">
+                <button type="button" class="password-toggle" data-password-toggle aria-label="Show password" aria-pressed="false"></button>
+              </span>
             </label>
             <label>
               <span data-en>Confirm password</span>
               <span data-zh>確認密碼</span>
-              <input name="confirm" type="password" autocomplete="new-password" required minlength="8">
+              <span class="password-field">
+                <input name="confirm" type="password" autocomplete="new-password" required minlength="8">
+                <button type="button" class="password-toggle" data-password-toggle aria-label="Show password" aria-pressed="false"></button>
+              </span>
             </label>
             <button class="btn btn-navy" type="submit">
               <span data-en>Create pending account</span>
               <span data-zh>建立待審核帳號</span>
             </button>
-            <p><button type="button" class="btn btn-line" data-auth-show="login">Back to sign-in</button></p>
+            <p>
+              <button type="button" class="btn btn-line" data-auth-show="login">
+                <span data-en>Back to sign-in</span>
+                <span data-zh>返回登入</span>
+              </button>
+            </p>
           </form>
           <form class="form card hidden" data-forgot-form data-auth-panel="forgot" hidden>
             <h2 data-en>Forgot password</h2>
@@ -83,7 +103,12 @@
               <span data-en>Send reset email</span>
               <span data-zh>寄送重設信件</span>
             </button>
-            <p><button type="button" class="btn btn-line" data-auth-show="login">Back to sign-in</button></p>
+            <p>
+              <button type="button" class="btn btn-line" data-auth-show="login">
+                <span data-en>Back to sign-in</span>
+                <span data-zh>返回登入</span>
+              </button>
+            </p>
           </form>
           <form class="form card hidden" data-reset-form data-auth-panel="reset" hidden>
             <h2 data-en>Set a new password</h2>
@@ -91,12 +116,18 @@
             <label>
               <span data-en>New password</span>
               <span data-zh>新密碼</span>
-              <input name="password" type="password" autocomplete="new-password" required minlength="8">
+              <span class="password-field">
+                <input name="password" type="password" autocomplete="new-password" required minlength="8">
+                <button type="button" class="password-toggle" data-password-toggle aria-label="Show password" aria-pressed="false"></button>
+              </span>
             </label>
             <label>
               <span data-en>Confirm password</span>
               <span data-zh>確認密碼</span>
-              <input name="confirm" type="password" autocomplete="new-password" required minlength="8">
+              <span class="password-field">
+                <input name="confirm" type="password" autocomplete="new-password" required minlength="8">
+                <button type="button" class="password-toggle" data-password-toggle aria-label="Show password" aria-pressed="false"></button>
+              </span>
             </label>
             <button class="btn btn-navy" type="submit">
               <span data-en>Update password</span>

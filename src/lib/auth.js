@@ -152,12 +152,28 @@ export async function signIn(email, password) {
 }
 
 export async function signUp(email, password) {
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: { emailRedirectTo: authRedirectTo("admin-login.html") },
   });
   if (error) throw error;
+  return data;
+}
+
+export function loginFailureMessage(err) {
+  const raw = err?.message || "";
+  const msg = raw.toLowerCase();
+  if (msg.includes("invalid login credentials") || msg.includes("invalid email or password")) {
+    return {
+      en: "That email or password is not correct",
+      zh: "電子郵件或密碼不正確",
+    };
+  }
+  if (!raw) {
+    return { en: "Could not sign in.", zh: "無法登入。" };
+  }
+  return { en: raw, zh: raw };
 }
 
 export async function requestPasswordReset(email) {
@@ -185,5 +201,10 @@ export async function listProfiles() {
 
 export async function setProfileRole(id, role) {
   const { error } = await supabase.from("profiles").update({ role }).eq("id", id);
+  if (error) throw error;
+}
+
+export async function adminDeleteUser(id) {
+  const { error } = await supabase.rpc("admin_delete_user", { target_id: id });
   if (error) throw error;
 }
