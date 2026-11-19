@@ -12,7 +12,7 @@ import {
   statusLabel,
   watchMarketplaceOrders,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus, withBusy } from "./lib/marketplaceUi.js";
+import { bindMarketLogout, marketToolbar, productCellHtml, publicOrderCode, sellerNameHtml, setStatus, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const list = document.querySelector("[data-orders]");
@@ -80,14 +80,9 @@ function renderList(orders) {
           .map(
             ({ order, item }) => `
           <tr>
-            <td>${order.order_code || order.id}<br><span class="meta">${order.id}</span></td>
-            <td>
-              <div class="market-checkout-product">
-                ${thumb(item)}
-                <strong>${item.title}</strong>
-              </div>
-            </td>
-            <td>${item.seller_label || "Campus seller"}</td>
+            <td>${publicOrderCode(order)}</td>
+            <td>${productCellHtml(item)}</td>
+            <td>${sellerNameHtml(item)}</td>
             <td>${item.quantity}</td>
             <td>${money(Number(item.unit_price) * Number(item.quantity))}</td>
             <td>${formatStamp(order.created_at)}</td>
@@ -113,8 +108,7 @@ async function renderDetail(order) {
     <p><a class="btn btn-line" href="marketplace-orders.html">Back to My Orders</a></p>
     <article class="card market-order-card">
       <p class="meta">${statusLabel(order.status)} · order total ${money(order.total)}</p>
-      <h2>Order ${order.order_code || order.id}</h2>
-      <p>Order ID: ${order.id}</p>
+      <h2>Order ${publicOrderCode(order)}</h2>
       <p>Order date: ${formatStamp(order.created_at)}</p>
       ${items
         .map((item) => {
@@ -125,7 +119,7 @@ async function renderDetail(order) {
             ${thumb(item)}
             <div>
               <p><strong>${item.title}</strong></p>
-              <p>Seller: ${item.seller_label || "Campus seller"}</p>
+              <p>${sellerNameHtml(item)}</p>
               <p>Quantity ${item.quantity} · ${money(item.unit_price)} each · line ${money(Number(item.unit_price) * Number(item.quantity))}</p>
               <p>Payment status: ${paymentLabel(item)}</p>
               <p>Order status: ${itemStatusLabel(stage)}</p>

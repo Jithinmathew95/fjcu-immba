@@ -12,7 +12,7 @@ import {
   setPlatformFee,
   statusLabel,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, fieldError, marketToolbar, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
+import { adminOrderCode, bindMarketLogout, fieldError, marketToolbar, productCellHtml, sellerNameHtml, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const status = document.querySelector("[data-market-status]");
@@ -125,7 +125,7 @@ function renderProducts(products) {
               (product) => `
             <tr>
               <td>${product.title}</td>
-              <td>${product.seller_id.slice(0, 8)}</td>
+              <td>${product.seller_label || product.seller_id.slice(0, 8)}</td>
               <td>${money(product.price)}</td>
               <td>${product.stock}${product.is_active ? "" : " · hidden"}</td>
             </tr>`
@@ -159,30 +159,31 @@ function renderOrders() {
   ordersEl.innerHTML = visible.length
     ? `<div class="admin-table-wrap"><table class="admin-table">
         <thead><tr>
-          <th><span data-en>Order</span><span data-zh>訂單</span></th>
+          <th><span data-en>Order ID</span><span data-zh>訂單編號</span></th>
           <th><span data-en>Buyer</span><span data-zh>買家</span></th>
+          <th><span data-en>Product</span><span data-zh>商品</span></th>
+          <th><span data-en>Seller</span><span data-zh>賣家</span></th>
           <th><span data-en>Overall</span><span data-zh>整單狀態</span></th>
-          <th><span data-en>Total</span><span data-zh>總額</span></th>
-          <th><span data-en>Seller lines</span><span data-zh>賣家明細</span></th>
+          <th><span data-en>Line</span><span data-zh>明細</span></th>
         </tr></thead>
         <tbody>
           ${visible
-            .map(
-              (order) => `
+            .flatMap((order) =>
+              (order.marketplace_order_items || []).map(
+                (item) => `
             <tr>
-              <td>${order.order_code || order.id.slice(0, 8)}<br><span class="meta">${order.id}</span></td>
+              <td>${adminOrderCode(order)}</td>
               <td>${order.buyer_email}</td>
+              <td>${productCellHtml(item)}</td>
+              <td>${sellerNameHtml(item)}</td>
               <td>${statusLabel(order.status)}</td>
-              <td>${money(order.total)}</td>
-              <td>${(order.marketplace_order_items || [])
-                .map(
-                  (item) =>
-                    `${item.title} × ${item.quantity} · ${item.seller_label || "seller"} · ${money(lineAmount(item))} · <span data-en>Status</span><span data-zh>狀態</span>: ${itemStatusLabel(itemStage(item))} · <span data-en>Platform fee</span><span data-zh>平台手續費</span> ${money(lineFee(item))}${
-                      item.shipped_at ? ` · shipped ${formatStamp(item.shipped_at)}` : ""
-                    }${item.completed_at ? ` · completed ${formatStamp(item.completed_at)}` : ""}`
-                )
-                .join("<br>")}</td>
+              <td>
+                ${item.quantity} · ${money(lineAmount(item))} · <span data-en>Status</span><span data-zh>狀態</span>: ${itemStatusLabel(itemStage(item))} · <span data-en>Platform fee</span><span data-zh>平台手續費</span> ${money(lineFee(item))}
+                ${item.shipped_at ? ` · shipped ${formatStamp(item.shipped_at)}` : ""}
+                ${item.completed_at ? ` · completed ${formatStamp(item.completed_at)}` : ""}
+              </td>
             </tr>`
+              )
             )
             .join("")}
         </tbody></table></div>`

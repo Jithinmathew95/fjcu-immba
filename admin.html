@@ -21,7 +21,7 @@
           <span data-en>Signed in as</span>
           <span data-zh>登入身分</span>
           <strong data-admin-email></strong>
-          · <span data-admin-role></span>
+          <span data-admin-role-wrap hidden> · <span data-admin-role></span></span>
           <button type="button" class="btn btn-line" data-logout>
             <span data-en>Sign out</span>
             <span data-zh>登出</span>
@@ -57,23 +57,23 @@
     </section>
     <section class="section hidden" data-pending-box hidden>
       <div class="wrap card">
-        <h2 data-en>Your account is waiting for approval</h2>
-        <h2 data-zh>您的帳號正在等待核准</h2>
-        <p data-en>A super admin must approve you before you can edit Faculty or News.</p>
-        <p data-zh>需由超級管理員核准後，才能編輯師資或消息。</p>
+        <h2 data-en>This area is for site staff. If you came to shop or sell, go to the Marketplace.</h2>
+        <h2 data-zh>此區僅供網站同仁使用。若您要購物或販售，請前往市集。</h2>
+        <p><a class="btn btn-navy" href="marketplace.html"><span data-en>Go to Marketplace</span><span data-zh>前往市集</span></a></p>
+        <p class="staff-note" data-en>If you asked for staff access, a site administrator will review your request.</p>
+        <p class="staff-note" data-zh>若您申請的是同仁權限，網站管理員將審核您的申請。</p>
       </div>
     </section>
     <section class="section hidden" data-rejected-box hidden>
       <div class="wrap card">
-        <h2 data-en>Your request was not approved</h2>
-        <h2 data-zh>您的申請未獲核准</h2>
-        <p data-en>This account cannot use the back-office.</p>
-        <p data-zh>此帳號無法使用後台。</p>
+        <h2 data-en>You don't have staff access.</h2>
+        <h2 data-zh>您沒有同仁後台權限。</h2>
+        <p><a class="btn btn-navy" href="marketplace.html"><span data-en>Go to Marketplace</span><span data-zh>前往市集</span></a></p>
       </div>
     </section>
   </main>
   <script src="/js/data.js?v=20261116a"></script>
-  <script src="/js/site.js?v=20261119a"></script>
+  <script src="/js/site.js?v=20261119d"></script>
   <script type="module" src="/src/admin-home.js"></script>
 </body>
 </html>

@@ -34,10 +34,6 @@
             <a href="https://www.management.fju.edu.tw/esubweb/immbaengindex/" target="_blank" rel="noreferrer" data-en>Official website</a>
             <a href="https://www.management.fju.edu.tw/subweb/immba/" target="_blank" rel="noreferrer" data-zh>官方網站</a>
           </p>
-          <button type="button" class="notice-collapse" data-collapse-nav>
-            <span data-en data-collapse-label>Collapse main menu</span>
-            <span data-zh data-collapse-label>收合主選單</span>
-          </button>
         </div>
       </div>
       <header class="site-header">
@@ -55,6 +51,10 @@
               <strong class="brand-program" data-zh>國際經營管理碩士班（imMBA）</strong>
             </a>
           </div>
+          <button type="button" class="nav-collapse" data-collapse-nav aria-expanded="true">
+            <span data-en data-collapse-label>Collapse main menu</span>
+            <span data-zh data-collapse-label>收合主選單</span>
+          </button>
         </div>
         <div class="nav-bar" data-nav>
           <div class="nav-bar-inner">
@@ -170,7 +170,7 @@
             <p data-zh>輔仁大學管理學院<br>242062 新北市新莊區中正路510號 LM208-1</p>
           </div>
           <div>
-            <p>T <a class="link-action" href="tel:+886229052750">+886-2-2905-2750</a><br>E <a class="link-action" href="mailto:imMBA@mail.fju.edu.tw">imMBA@mail.fju.edu.tw</a></p>
+            <p><span data-en>Phone</span><span data-zh>電話</span> <a class="link-action" href="tel:+886229052750">+886-2-2905-2750</a><br><span data-en>Email</span><span data-zh>電子郵件</span> <a class="link-action" href="mailto:imMBA@mail.fju.edu.tw">imMBA@mail.fju.edu.tw</a></p>
             <p data-en>Ms. Chang, Programme Office</p>
             <p data-zh>張秘書／學程辦公室</p>
           </div>
@@ -317,7 +317,9 @@
   }
 
   function observeReveal() {
-    const revealSel = document.body.dataset.page === "marketplace"
+    const pageName = document.body.dataset.page || "home";
+    if (pageName === "admin-login" || pageName.startsWith("admin")) return;
+    const revealSel = pageName === "marketplace"
       ? ".stats-grid > div, .card, .news-card, .faculty-card, .partner, .env-shot, .photo, .step"
       : ".hero-inner, .page-hero .wrap, .stats-grid > div, .card, .news-card, .faculty-card, .partner, .env-shot, .photo, .step";
     const nodes = document.querySelectorAll(revealSel);
@@ -393,6 +395,67 @@
   document.querySelector("[data-menu]")?.addEventListener("click", () => {
     document.querySelector("[data-main-nav]")?.classList.toggle("open");
   });
+
+  (function bindSubmenus() {
+    const nav = document.querySelector("[data-main-nav]");
+    if (!nav) return;
+    const items = [...nav.querySelectorAll(":scope > ul > li.has-sub")];
+    let closeTimer = 0;
+
+    function setOpen(item, open) {
+      item.classList.toggle("is-open", open);
+      item.querySelector(":scope > a")?.setAttribute("aria-expanded", String(open));
+    }
+
+    function closeAll(except) {
+      items.forEach((item) => {
+        if (item !== except) setOpen(item, false);
+      });
+    }
+
+    function openItem(item) {
+      window.clearTimeout(closeTimer);
+      closeAll(item);
+      setOpen(item, true);
+    }
+
+    items.forEach((item) => {
+      const trigger = item.querySelector(":scope > a");
+      if (!trigger) return;
+      trigger.setAttribute("aria-haspopup", "true");
+      trigger.setAttribute("aria-expanded", "false");
+      item.addEventListener("pointerenter", (event) => {
+        if (event.pointerType === "touch") return;
+        openItem(item);
+      });
+      item.addEventListener("pointerleave", (event) => {
+        if (event.pointerType === "touch") return;
+        window.clearTimeout(closeTimer);
+        closeTimer = window.setTimeout(() => setOpen(item, false), 300);
+      });
+      trigger.addEventListener("click", (event) => {
+        if (item.classList.contains("is-open")) return;
+        event.preventDefault();
+        openItem(item);
+      });
+      trigger.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " " && event.key !== "ArrowDown") return;
+        if (item.classList.contains("is-open") && event.key === "Enter") return;
+        event.preventDefault();
+        openItem(item);
+        item.querySelector(".submenu a")?.focus();
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!nav.contains(event.target)) closeAll();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      closeAll();
+      nav.classList.remove("open");
+    });
+  })();
 
   const NAV_COLLAPSE = "immba-nav-collapsed";
   function applyNavCollapse(collapsed) {

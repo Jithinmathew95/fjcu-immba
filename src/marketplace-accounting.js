@@ -17,7 +17,7 @@ import {
   transactionDate,
   watchMarketplaceOrders,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus } from "./lib/marketplaceUi.js";
+import { bindMarketLogout, marketToolbar, productCellHtml, publicOrderCode, setStatus } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const status = document.querySelector("[data-market-status]");
@@ -187,10 +187,10 @@ function renderHistory() {
           .map(({ order, item }) => {
             const amount = lineAmount(item);
             return `<tr>
-              <td>${order.order_code || order.id}<br><span class="meta">${order.id}</span></td>
-              <td><span class="meta">${item.id}</span></td>
+              <td>${publicOrderCode(order)}</td>
+              <td><span class="market-order-uuid">${item.id}</span></td>
               <td>${order.buyer_email || "Buyer"}</td>
-              <td>${item.title}</td>
+              <td>${productCellHtml(item)}</td>
               <td>${item.quantity}</td>
               <td>${money(item.unit_price)}</td>
               <td>${money(amount)}</td>
@@ -230,7 +230,7 @@ function exportHistoryCsv() {
     headers.map(csvCell).join(","),
     ...filteredRows().map(({ order, item }) =>
       [
-        order.order_code || order.id,
+        order.order_code || "—",
         item.id,
         order.buyer_email || "Buyer",
         item.title,

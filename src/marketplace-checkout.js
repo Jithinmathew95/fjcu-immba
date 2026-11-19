@@ -9,7 +9,7 @@ import {
   placeOrder,
   statusLabel,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, markBusy, markIdle, marketToolbar, setStatus, showActionFeedback } from "./lib/marketplaceUi.js";
+import { bindMarketLogout, markBusy, markIdle, marketToolbar, productCellHtml, publicOrderCode, sellerNameHtml, setStatus, showActionFeedback } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const panel = document.querySelector("[data-checkout]");
@@ -34,8 +34,7 @@ function orderBlock(order) {
   return `
     <article class="card">
       <p class="meta">${statusLabel(order.status)}</p>
-      <h2>Order ${order.order_code || order.id}</h2>
-      <p>Order ID: ${order.id}</p>
+      <h2>Order ${publicOrderCode(order)}</h2>
       <p>${new Date(order.created_at).toLocaleString()}</p>
       <div class="admin-table-wrap">
         <table class="admin-table">
@@ -53,8 +52,8 @@ function orderBlock(order) {
               .map(
                 (item) => `
               <tr>
-                <td>${item.title}</td>
-                <td>${item.seller_label || "Seller"}</td>
+                <td>${productCellHtml(item)}</td>
+                <td>${sellerNameHtml(item)}</td>
                 <td>${item.quantity}</td>
                 <td>${money(item.unit_price)}</td>
                 <td>${money(Number(item.unit_price) * Number(item.quantity))}</td>
@@ -134,7 +133,7 @@ async function renderConfirmation(id) {
     setStatus(status, "That order was not found.", "error");
     return;
   }
-  setStatus(status, `Order confirmed. Your order ID is ${order.order_code || order.id}.`);
+  setStatus(status, `Order confirmed. Your order ID is ${order.order_code || "—"}.`);
   if (panel) panel.innerHTML = orderBlock(order);
 }
 

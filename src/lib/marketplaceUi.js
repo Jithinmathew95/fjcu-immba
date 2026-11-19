@@ -1,4 +1,5 @@
 import { isBuyer, isPlatformAdmin, isSeller, loginHref, signOut } from "./auth.js";
+import { lineImage } from "./marketplaceApi.js";
 
 export function marketToolbar(profile, current) {
   const signedIn = Boolean(profile?.user);
@@ -25,7 +26,7 @@ export function marketToolbar(profile, current) {
        <button type="button" class="btn btn-line" data-market-logout>
          <span data-en>Sign out</span><span data-zh>登出</span>
        </button>`
-    : `<a class="btn btn-navy" href="${loginHref(current)}">
+    : `<a class="btn btn-navy market-toolbar-auth" href="${loginHref(current)}">
          <span data-en>Sign in</span><span data-zh>登入</span>
        </a>`;
   return `
@@ -72,6 +73,30 @@ export function escHtml(value) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+export function publicOrderCode(order) {
+  return escHtml(order?.order_code || "—");
+}
+
+export function adminOrderCode(order) {
+  const code = publicOrderCode(order);
+  if (!order?.id) return code;
+  return `${code}<br><span class="market-order-uuid">${escHtml(order.id)}</span>`;
+}
+
+export function sellerNameHtml(item) {
+  const name = String(item?.seller_label || "").trim();
+  if (name) return `<span class="market-seller-cell">${escHtml(name)}</span>`;
+  return `<span class="market-seller-cell"><span data-en>Campus seller</span><span data-zh>校園賣家</span></span>`;
+}
+
+export function productCellHtml(item) {
+  const src = lineImage(item);
+  const photo = src
+    ? `<img class="market-cart-thumb" src="${escHtml(src)}" alt="">`
+    : `<div class="market-cart-thumb is-empty"><span data-en>No image</span><span data-zh>無圖片</span></div>`;
+  return `<div class="market-product-cell">${photo}<strong>${escHtml(item?.title || "")}</strong></div>`;
 }
 
 const KNOWN_ERRORS = {

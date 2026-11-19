@@ -16,7 +16,7 @@ import {
   updateInventory,
   watchMarketplaceOrders,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
+import { bindMarketLogout, marketToolbar, productCellHtml, publicOrderCode, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const status = document.querySelector("[data-market-status]");
@@ -153,7 +153,6 @@ function renderStage(el, rows, stage) {
   }
   el.innerHTML = groupOrders(rows)
     .map(({ order, items }) => {
-      const code = order.order_code || order.id;
       return `<div class="admin-table-wrap market-order-block">
         <table class="admin-table">
           <thead>
@@ -172,9 +171,9 @@ function renderStage(el, rows, stage) {
               .map(
                 (item) => `
               <tr>
-                <td>${code}<br><span class="meta">${order.id}</span></td>
+                <td>${publicOrderCode(order)}</td>
                 <td>${order.buyer_email}</td>
-                <td>${item.title}</td>
+                <td>${productCellHtml(item)}</td>
                 <td>${item.quantity}</td>
                 <td>${money(Number(item.unit_price) * Number(item.quantity))}</td>
                 <td>${itemStatusLabel(itemStage(item))}</td>

@@ -32,8 +32,11 @@ try {
     window.location.replace("admin-login.html");
   } else {
     if (emailEl) emailEl.textContent = profile.email || profile.user.email || "";
-    if (roleEl) roleEl.textContent = profile.role;
-    show(staffLinks, isStaffRole(profile.role));
+    const staff = isStaffRole(profile.role);
+    const roleWrap = document.querySelector("[data-admin-role-wrap]");
+    if (roleEl) roleEl.textContent = staff ? profile.role : "";
+    show(roleWrap, staff);
+    show(staffLinks, staff);
     show(pendingBox, profile.role === "pending");
     show(rejectedBox, profile.role === "rejected");
     if (profile.role === "super_admin") {

@@ -14,7 +14,7 @@ import {
   statusLabel,
   watchMarketplaceOrders,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus, withBusy } from "./lib/marketplaceUi.js";
+import { bindMarketLogout, marketToolbar, productCellHtml, publicOrderCode, setStatus, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const panel = document.querySelector("[data-sales]");
@@ -79,14 +79,9 @@ function renderList(rows) {
           .map(
             ({ order, item }) => `
           <tr>
-            <td>${order.order_code || order.id}<br><span class="meta">${order.id}</span></td>
+            <td>${publicOrderCode(order)}</td>
             <td>${order.buyer_email}</td>
-            <td>
-              <div class="market-checkout-product">
-                ${thumb(item)}
-                <strong>${item.title}</strong>
-              </div>
-            </td>
+            <td>${productCellHtml(item)}</td>
             <td>${item.quantity}</td>
             <td>${money(Number(item.unit_price) * Number(item.quantity))}</td>
             <td>${formatStamp(order.created_at)}</td>
@@ -115,8 +110,7 @@ async function renderDetail(order, mine) {
     <p><a class="btn btn-line" href="marketplace-sales.html">Back to My Sales</a></p>
     <article class="card market-order-card">
       <p class="meta">${statusLabel(order.status)} · your subtotal ${money(subtotal)}</p>
-      <h2>Order ${order.order_code || order.id}</h2>
-      <p>Order ID: ${order.id}</p>
+      <h2>Order ${publicOrderCode(order)}</h2>
       <p>Buyer: ${order.buyer_email}</p>
       <p>Order date: ${formatStamp(order.created_at)}</p>
       <p>You only see and process the items you sold on this order.</p>
