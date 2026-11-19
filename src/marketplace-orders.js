@@ -2,6 +2,7 @@ import { requireBuyer } from "./lib/auth.js";
 import {
   confirmDelivery,
   formatStamp,
+  formatStampHtml,
   itemStage,
   itemStatusLabel,
   lineImage,
@@ -64,24 +65,24 @@ function renderList(orders) {
           <th class="col-product">Product</th>
           <th class="col-seller">Seller</th>
           <th class="col-qty">Qty</th>
-          <th>Total</th>
-          <th>Order date</th>
-          <th>Payment status</th>
-          <th>Order status</th>
-          <th></th>`,
+          <th class="col-total">Total</th>
+          <th class="col-date">Order date</th>
+          <th class="col-pay">Payment status</th>
+          <th class="col-status">Order status</th>
+          <th class="col-action"></th>`,
     body: rows
       .map(
         ({ order, item }) => `
           <tr>
-            <td>${publicOrderCode(order)}</td>
-            <td>${productCellHtml(item)}</td>
-            <td>${sellerNameHtml(item)}</td>
-            <td>${item.quantity}</td>
-            <td>${money(Number(item.unit_price) * Number(item.quantity))}</td>
-            <td>${formatStamp(order.created_at)}</td>
-            <td>${paymentLabel(item)}</td>
-            <td>${itemStatusLabel(itemStage(item))}</td>
-            <td><a class="btn btn-line" href="marketplace-orders.html?id=${order.id}">View details</a></td>
+            <td class="col-order-id">${publicOrderCode(order)}</td>
+            <td class="col-product">${productCellHtml(item)}</td>
+            <td class="col-seller">${sellerNameHtml(item)}</td>
+            <td class="col-qty">${item.quantity}</td>
+            <td class="col-total">${money(Number(item.unit_price) * Number(item.quantity))}</td>
+            <td class="col-date">${formatStampHtml(order.created_at)}</td>
+            <td class="col-pay">${paymentLabel(item)}</td>
+            <td class="col-status">${itemStatusLabel(itemStage(item))}</td>
+            <td class="col-action"><a class="btn btn-line" href="marketplace-orders.html?id=${order.id}"><span data-en>View details</span><span data-zh>查看詳情</span></a></td>
           </tr>`
       )
       .join(""),
@@ -93,6 +94,7 @@ function renderList(orders) {
           { en: "Seller", zh: "賣家", html: sellerNameHtml(item) },
           { en: "Qty", zh: "數量", html: String(item.quantity) },
           { en: "Total", zh: "合計", html: money(Number(item.unit_price) * Number(item.quantity)) },
+          { en: "Order date", zh: "訂單日期", html: formatStampHtml(order.created_at) },
           { en: "Status", zh: "狀態", html: `${paymentLabel(item)} · ${itemStatusLabel(itemStage(item))}` },
           {
             en: "Details",

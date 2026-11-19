@@ -2,6 +2,7 @@ import { requireSeller } from "./lib/auth.js";
 import {
   currentMonthKey,
   formatStamp,
+  formatStampHtml,
   itemStage,
   itemStatusLabel,
   lastTwelveMonthKeys,
@@ -165,33 +166,29 @@ function renderHistory() {
   }
   historyEl.innerHTML = orderViewsHtml({
     headers: `<th class="col-order-id">Order ID</th>
-          <th>Transaction ID</th>
           <th class="col-buyer">Buyer Name</th>
           <th class="col-product">Product Name</th>
-          <th class="col-qty">Quantity</th>
-          <th>Unit Price</th>
-          <th>Total Amount</th>
-          <th><span data-en>Platform fee</span><span data-zh>平台手續費</span></th>
-          <th><span data-en>You receive</span><span data-zh>您實收</span></th>
-          <th>Payment Status</th>
-          <th>Transaction Status</th>
-          <th>Transaction Date</th>`,
+          <th class="col-qty">Qty</th>
+          <th class="col-total">Total</th>
+          <th class="col-total"><span data-en>Platform fee</span><span data-zh>平台手續費</span></th>
+          <th class="col-total"><span data-en>You receive</span><span data-zh>您實收</span></th>
+          <th class="col-pay">Payment Status</th>
+          <th class="col-status">Transaction Status</th>
+          <th class="col-date">Transaction Date</th>`,
     body: visible
       .map(({ order, item }) => {
         const amount = lineAmount(item);
         return `<tr>
-              <td>${publicOrderCode(order)}</td>
-              <td><span class="market-order-uuid">${item.id}</span></td>
-              <td>${personNameHtml(order.buyer_email, "Buyer")}</td>
-              <td>${productCellHtml(item)}</td>
-              <td>${item.quantity}</td>
-              <td>${money(item.unit_price)}</td>
-              <td>${money(amount)}</td>
-              <td>${money(lineFee(item))}</td>
-              <td>${money(sellerReceive(item))}</td>
-              <td>${paymentLabel(item)}</td>
-              <td>${itemStatusLabel(itemStage(item))}</td>
-              <td>${formatStamp(transactionDate(order, item))}</td>
+              <td class="col-order-id">${publicOrderCode(order)}</td>
+              <td class="col-buyer">${personNameHtml(order.buyer_email, "Buyer")}</td>
+              <td class="col-product">${productCellHtml(item)}</td>
+              <td class="col-qty">${item.quantity}</td>
+              <td class="col-total">${money(amount)}</td>
+              <td class="col-total">${money(lineFee(item))}</td>
+              <td class="col-total">${money(sellerReceive(item))}</td>
+              <td class="col-pay">${paymentLabel(item)}</td>
+              <td class="col-status">${itemStatusLabel(itemStage(item))}</td>
+              <td class="col-date">${formatStampHtml(transactionDate(order, item))}</td>
             </tr>`;
       })
       .join(""),
@@ -204,6 +201,7 @@ function renderHistory() {
           { en: "Buyer", zh: "買家", html: personNameHtml(order.buyer_email, "Buyer") },
           { en: "Qty", zh: "數量", html: String(item.quantity) },
           { en: "Total", zh: "合計", html: money(amount) },
+          { en: "Order date", zh: "訂單日期", html: formatStampHtml(transactionDate(order, item)) },
           { en: "Status", zh: "狀態", html: `${paymentLabel(item)} · ${itemStatusLabel(itemStage(item))}` },
           { en: "You receive", zh: "您實收", html: money(sellerReceive(item)) },
         ]);

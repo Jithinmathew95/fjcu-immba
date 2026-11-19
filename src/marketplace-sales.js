@@ -3,6 +3,7 @@ import {
   confirmPayment,
   confirmShipment,
   formatStamp,
+  formatStampHtml,
   itemStage,
   itemStatusLabel,
   lineImage,
@@ -63,25 +64,25 @@ function renderList(rows) {
           <th class="col-buyer">Buyer</th>
           <th class="col-product">Purchased products</th>
           <th class="col-qty">Qty</th>
-          <th>Total</th>
-          <th>Order date</th>
-          <th>Payment status</th>
-          <th>Order status</th>
-          <th>Action</th>`,
+          <th class="col-total">Total</th>
+          <th class="col-date">Order date</th>
+          <th class="col-pay">Payment status</th>
+          <th class="col-status">Order status</th>
+          <th class="col-action">Action</th>`,
     body: rows
       .map(
         ({ order, item }) => `
           <tr>
-            <td>${publicOrderCode(order)}</td>
-            <td>${personNameHtml(order.buyer_email, "Buyer")}</td>
-            <td>${productCellHtml(item)}</td>
-            <td>${item.quantity}</td>
-            <td>${money(Number(item.unit_price) * Number(item.quantity))}</td>
-            <td>${formatStamp(order.created_at)}</td>
-            <td>${paymentLabel(item)}</td>
-            <td>${itemStatusLabel(itemStage(item))}</td>
-            <td class="admin-actions">
-              <a class="btn btn-line" href="marketplace-sales.html?id=${order.id}">View details</a>
+            <td class="col-order-id">${publicOrderCode(order)}</td>
+            <td class="col-buyer">${personNameHtml(order.buyer_email, "Buyer")}</td>
+            <td class="col-product">${productCellHtml(item)}</td>
+            <td class="col-qty">${item.quantity}</td>
+            <td class="col-total">${money(Number(item.unit_price) * Number(item.quantity))}</td>
+            <td class="col-date">${formatStampHtml(order.created_at)}</td>
+            <td class="col-pay">${paymentLabel(item)}</td>
+            <td class="col-status">${itemStatusLabel(itemStage(item))}</td>
+            <td class="col-action admin-actions">
+              <a class="btn btn-line" href="marketplace-sales.html?id=${order.id}"><span data-en>View details</span><span data-zh>查看詳情</span></a>
               ${actionFor(item)}
             </td>
           </tr>`
@@ -95,6 +96,7 @@ function renderList(rows) {
           { en: "Buyer", zh: "買家", html: personNameHtml(order.buyer_email, "Buyer") },
           { en: "Qty", zh: "數量", html: String(item.quantity) },
           { en: "Total", zh: "合計", html: money(Number(item.unit_price) * Number(item.quantity)) },
+          { en: "Order date", zh: "訂單日期", html: formatStampHtml(order.created_at) },
           { en: "Status", zh: "狀態", html: `${paymentLabel(item)} · ${itemStatusLabel(itemStage(item))}` },
           {
             en: "Action",

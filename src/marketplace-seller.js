@@ -170,27 +170,27 @@ function renderStage(el, rows, stage) {
               <th class="col-buyer">Buyer</th>
               <th class="col-product">Products</th>
               <th class="col-qty">Qty</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th>Action</th>`,
+              <th class="col-total">Total</th>
+              <th class="col-status">Status</th>
+              <th class="col-action">Action</th>`,
         body:
           items
             .map(
               (item) => `
               <tr>
-                <td>${publicOrderCode(order)}</td>
-                <td>${personNameHtml(order.buyer_email, "Buyer")}</td>
-                <td>${productCellHtml(item)}</td>
-                <td>${item.quantity}</td>
-                <td>${money(Number(item.unit_price) * Number(item.quantity))}</td>
-                <td>${itemStatusLabel(itemStage(item))}</td>
-                <td>${actionCell(item, stage)}</td>
+                <td class="col-order-id">${publicOrderCode(order)}</td>
+                <td class="col-buyer">${personNameHtml(order.buyer_email, "Buyer")}</td>
+                <td class="col-product">${productCellHtml(item)}</td>
+                <td class="col-qty">${item.quantity}</td>
+                <td class="col-total">${money(Number(item.unit_price) * Number(item.quantity))}</td>
+                <td class="col-status">${itemStatusLabel(itemStage(item))}</td>
+                <td class="col-action">${actionCell(item, stage)}</td>
               </tr>`
             )
             .join("") +
           `<tr>
               <td colspan="4"><strong>Seller subtotal for this order</strong></td>
-              <td colspan="3"><strong>${money(sellerTotal(items))}</strong></td>
+              <td class="col-total" colspan="3"><strong>${money(sellerTotal(items))}</strong></td>
             </tr>`,
         cards:
           cards +

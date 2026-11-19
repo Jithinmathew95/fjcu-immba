@@ -454,6 +454,16 @@ export function formatStamp(value) {
   return new Date(value).toLocaleString();
 }
 
+export function formatStampHtml(value) {
+  if (!value) return "";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n) => String(n).padStart(2, "0");
+  const date = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const time = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return `<span class="market-stamp"><span class="market-stamp-date">${date}</span><span class="market-stamp-time">${time}</span></span>`;
+}
+
 export function money(value) {
   const amount = Number(value);
   if (!Number.isFinite(amount)) return "NT$0";

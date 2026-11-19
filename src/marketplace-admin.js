@@ -162,18 +162,18 @@ function renderOrders() {
           <th class="col-buyer"><span data-en>Buyer</span><span data-zh>買家</span></th>
           <th class="col-product"><span data-en>Product</span><span data-zh>商品</span></th>
           <th class="col-seller"><span data-en>Seller</span><span data-zh>賣家</span></th>
-          <th><span data-en>Overall</span><span data-zh>整單狀態</span></th>
-          <th><span data-en>Line</span><span data-zh>明細</span></th>`,
+          <th class="col-status"><span data-en>Overall</span><span data-zh>整單狀態</span></th>
+          <th class="col-line"><span data-en>Line</span><span data-zh>明細</span></th>`,
         body: lineRows
           .map(
             ({ order, item }) => `
             <tr>
-              <td>${adminOrderCode(order)}</td>
-              <td>${personNameHtml(order.buyer_email, "Buyer")}</td>
-              <td>${productCellHtml(item)}</td>
-              <td>${sellerNameHtml(item)}</td>
-              <td>${statusLabel(order.status)}</td>
-              <td>
+              <td class="col-order-id">${adminOrderCode(order)}</td>
+              <td class="col-buyer">${personNameHtml(order.buyer_email, "Buyer")}</td>
+              <td class="col-product">${productCellHtml(item)}</td>
+              <td class="col-seller">${sellerNameHtml(item)}</td>
+              <td class="col-status">${statusLabel(order.status)}</td>
+              <td class="col-line">
                 ${item.quantity} · ${money(lineAmount(item))} · <span data-en>Status</span><span data-zh>狀態</span>: ${itemStatusLabel(itemStage(item))} · <span data-en>Platform fee</span><span data-zh>平台手續費</span> ${money(lineFee(item))}
                 ${item.shipped_at ? ` · shipped ${formatStamp(item.shipped_at)}` : ""}
                 ${item.completed_at ? ` · completed ${formatStamp(item.completed_at)}` : ""}

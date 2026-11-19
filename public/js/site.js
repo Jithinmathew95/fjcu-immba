@@ -52,8 +52,8 @@
             </a>
           </div>
           <button type="button" class="nav-collapse" data-collapse-nav aria-expanded="true">
-            <span data-en data-collapse-label>Collapse main menu</span>
-            <span data-zh data-collapse-label>收合主選單</span>
+            <span data-en data-collapse-label>Collapse menu</span>
+            <span data-zh data-collapse-label>收合選單</span>
           </button>
         </div>
         <div class="nav-bar" data-nav>
@@ -93,14 +93,14 @@
                     <li><a data-nav-link="downloads" href="downloads.html"><span data-en>Downloads</span><span data-zh>檔案下載</span></a></li>
                   </ul>
                 </li>
+                <li><a class="nav-news" data-nav-link="news" href="news.html"><span data-en>News</span><span data-zh>最新消息</span></a></li>
               </ul>
             </nav>
-            <div class="nav-actions">
-              <a class="nav-news" data-nav-link="news" href="news.html"><span data-en>News</span><span data-zh>最新消息</span></a>
-              <button type="button" class="lang-switch" data-lang-switch>中文版</button>
-              <a class="nav-cta" href="admissions.html"><span data-en>Apply Now</span><span data-zh>立即申請</span></a>
-            </div>
           </div>
+        </div>
+        <div class="nav-utility">
+          <button type="button" class="lang-switch" data-lang-switch>中文版</button>
+          <a class="nav-cta" href="admissions.html"><span data-en>Apply Now</span><span data-zh>立即申請</span></a>
         </div>
       </header>`;
   }
@@ -466,8 +466,8 @@
     btn.querySelectorAll("[data-collapse-label]").forEach((el) => {
       const isZh = el.hasAttribute("data-zh");
       el.textContent = collapsed
-        ? (isZh ? "展開主選單" : "Expand main menu")
-        : (isZh ? "收合主選單" : "Collapse main menu");
+        ? (isZh ? "展開選單" : "Expand menu")
+        : (isZh ? "收合選單" : "Collapse menu");
     });
   }
   applyNavCollapse(sessionStorage.getItem(NAV_COLLAPSE) === "1");
