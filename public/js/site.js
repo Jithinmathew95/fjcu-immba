@@ -82,7 +82,7 @@
                 </li>
                 <li><a data-nav-link="faculty" href="faculty.html"><span data-en>Faculty</span><span data-zh>師資介紹</span></a></li>
                 <li><a data-nav-link="dual" href="dual-degree.html"><span data-en>Dual Degree</span><span data-zh>雙聯學位</span></a></li>
-                <li><a data-nav-link="marketplace" href="marketplace.html"><span data-en>Marketplace</span><span data-zh>教材市集</span></a></li>
+                <li><a data-nav-link="marketplace" href="marketplace.html"><span data-en>Marketplace</span><span data-zh>市集</span></a></li>
                 <li class="has-sub">
                   <a data-nav-link="more" href="guide.html"><span data-en>More</span><span data-zh>更多</span></a>
                   <ul class="submenu">
@@ -121,6 +121,7 @@
                 <li><a href="admissions.html"><span data-en>Admissions</span><span data-zh>招生資訊</span></a></li>
                 <li><a href="curriculum.html"><span data-en>Courses</span><span data-zh>課程</span></a></li>
                 <li><a href="faculty.html"><span data-en>Faculty</span><span data-zh>師資介紹</span></a></li>
+                <li><a href="marketplace.html"><span data-en>Marketplace</span><span data-zh>市集</span></a></li>
                 <li><a href="gallery.html"><span data-en>Photo gallery</span><span data-zh>相片集錦</span></a></li>
                 <li><a href="contact.html"><span data-en>Contact us</span><span data-zh>聯絡我們</span></a></li>
                 <li><a href="admin-news.html"><span data-en>AdminNews</span><span data-zh>消息後台</span></a></li>
@@ -316,7 +317,10 @@
   }
 
   function observeReveal() {
-    const nodes = document.querySelectorAll(".hero-inner, .page-hero .wrap, .stats-grid > div, .card, .news-card, .faculty-card, .partner, .env-shot, .photo, .step");
+    const revealSel = document.body.dataset.page === "marketplace"
+      ? ".stats-grid > div, .card, .news-card, .faculty-card, .partner, .env-shot, .photo, .step"
+      : ".hero-inner, .page-hero .wrap, .stats-grid > div, .card, .news-card, .faculty-card, .partner, .env-shot, .photo, .step";
+    const nodes = document.querySelectorAll(revealSel);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       nodes.forEach((el) => el.classList.add("is-in"));
       return;
@@ -365,6 +369,9 @@
   document.body.insertAdjacentHTML("afterbegin", header());
   document.body.insertAdjacentHTML("beforeend", footer());
   document.querySelectorAll(`[data-nav-link="${page}"]`).forEach((el) => el.classList.add("active"));
+  if (page === "marketplace" || /marketplace/i.test(location.pathname)) {
+    document.querySelector('[data-nav-link="marketplace"]')?.classList.add("active");
+  }
   if (["about", "environment"].includes(page)) {
     document.querySelector('[data-nav-link="about-parent"]')?.classList.add("active");
   }

@@ -25,6 +25,24 @@
     </header>
     <section class="section">
       <div class="wrap">
+        <article class="card">
+          <h2 data-en>Platform fee</h2>
+          <h2 data-zh>平台手續費</h2>
+          <p class="lede" data-en>Charged once per order line. Buyers never see it. Changing this amount does not change orders already placed.</p>
+          <p class="lede" data-zh>每筆訂單明細收取一次。買家不會看到此費用。之後更改不會影響已成立的訂單。</p>
+          <form class="admin-toolbar market-browse-bar" data-fee-form novalidate>
+            <label>
+              <span data-en>Fee per transaction (NT$)</span>
+              <span data-zh>每筆交易手續費（NT$）</span>
+              <input name="platform_fee" type="number" min="0" step="1" value="4" data-platform-fee required>
+            </label>
+            <button type="submit" class="btn btn-navy" data-save-fee>
+              <span data-en>Save fee</span>
+              <span data-zh>儲存手續費</span>
+            </button>
+            <span class="market-action-feedback hidden" data-action-feedback role="status" aria-live="polite" aria-atomic="true" hidden></span>
+          </form>
+        </article>
         <h2 data-en>Users</h2>
         <h2 data-zh>使用者</h2>
         <div data-admin-users></div>
@@ -33,23 +51,32 @@
         <div data-admin-products></div>
         <h2 data-en>Transactions</h2>
         <h2 data-zh>交易</h2>
-        <div class="admin-toolbar">
-          <input data-order-search type="search" placeholder="Search orders, buyers, titles">
-          <select data-order-status>
-            <option value="">All statuses</option>
-            <option value="pending_payment">Waiting for Payment</option>
-            <option value="paid">Ready to Ship</option>
-            <option value="shipped">Shipped</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
+        <div class="admin-toolbar market-browse-bar">
+          <label>
+            <span data-en>Search by Order ID</span>
+            <span data-zh>依訂單編號搜尋</span>
+            <input data-order-search type="search" placeholder="IMMBA-DEMO01">
+          </label>
+          <label>
+            <span data-en>Status</span>
+            <span data-zh>狀態</span>
+            <select data-order-status>
+              <option value="">All statuses</option>
+              <option value="pending_payment">Waiting for Payment</option>
+              <option value="paid">Ready to Ship</option>
+              <option value="shipped">Shipped</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </label>
         </div>
+        <div data-admin-totals></div>
         <div data-admin-orders></div>
       </div>
     </section>
   </main>
   <script src="/js/data.js?v=20261116a"></script>
-  <script src="/js/site.js?v=20261117b"></script>
+  <script src="/js/site.js?v=20261119a"></script>
   <script type="module" src="/src/marketplace-admin.js"></script>
 </body>
 </html>

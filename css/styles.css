@@ -525,6 +525,46 @@ h1 {
   box-shadow: 0 10px 20px rgba(16, 36, 58, 0.12);
 }
 
+.btn:disabled,
+.btn[aria-busy="true"] {
+  opacity: 0.55;
+  cursor: wait;
+  pointer-events: none;
+  filter: grayscale(0.35);
+  transform: none;
+  box-shadow: none;
+}
+
+.market-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.market-action-feedback {
+  display: inline-block;
+  max-width: 28ch;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.market-action-feedback[data-kind="error"] {
+  color: #8b1e1e;
+}
+
+.market-action-feedback a {
+  color: var(--navy);
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+.market-action-feedback.hidden {
+  display: none !important;
+}
+
 .btn-gold {
   background: var(--gold);
   color: var(--navy);
@@ -1149,12 +1189,41 @@ a.btn.link-action::after {
   margin: 8px 0 16px;
 }
 
+[data-page="marketplace"] .site-header {
+  z-index: 20;
+}
+
+[data-page="marketplace"] .page-hero,
+[data-page="marketplace"] main {
+  position: relative;
+  z-index: 0;
+}
+
 .market-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   margin: 16px 0 0;
+  position: static;
+  top: auto;
+  z-index: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
+.market-toolbar .btn {
+  color: var(--navy);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.market-toolbar .btn:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 .market-toolbar .is-active {
@@ -1165,11 +1234,12 @@ a.btn.link-action::after {
 
 .market-who {
   margin-left: auto;
-  color: var(--muted);
+  color: var(--ink);
+  font-weight: 700;
 }
 
 .market-card p {
-  color: var(--muted);
+  color: #3d4a57;
 }
 
 .market-card-photo {
@@ -1204,6 +1274,7 @@ a.btn.link-action::after {
   flex-direction: column;
   gap: 6px;
   font-size: 14px;
+  color: var(--ink);
 }
 
 .market-browse-bar input,
@@ -1211,8 +1282,62 @@ a.btn.link-action::after {
   min-width: 180px;
   padding: 8px 10px;
   font: inherit;
+  color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 6px;
+}
+
+[data-page="marketplace"] .page-hero .kicker {
+  color: #6b4f12 !important;
+}
+
+[data-page="marketplace"] .page-hero .lede,
+[data-page="marketplace"] .lede {
+  color: #3d4a57;
+}
+
+[data-page="marketplace"] .form label,
+[data-page="marketplace"] label {
+  color: var(--ink);
+}
+
+[data-page="marketplace"] .form input,
+[data-page="marketplace"] .form select,
+[data-page="marketplace"] .form textarea,
+[data-page="marketplace"] input,
+[data-page="marketplace"] select,
+[data-page="marketplace"] textarea {
+  color: var(--ink);
+}
+
+[data-page="marketplace"] .form input::placeholder,
+[data-page="marketplace"] .form textarea::placeholder,
+[data-page="marketplace"] input::placeholder,
+[data-page="marketplace"] textarea::placeholder {
+  color: #3d4a57;
+  opacity: 1;
+}
+
+[data-page="marketplace"] .meta {
+  color: #3d4a57;
+}
+
+.market-history-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.market-history-head h2 {
+  margin: 0;
+}
+
+.market-admin-totals {
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0 0 24px;
 }
 
 .market-qty {
@@ -1501,7 +1626,7 @@ a.btn.link-action::after {
     position: relative;
   }
 
-  nav {
+  .nav-bar nav {
     display: none;
     position: absolute;
     left: 0;
@@ -1510,41 +1635,28 @@ a.btn.link-action::after {
     background: var(--steel);
     border-bottom: 1px solid #4a7191;
     padding: 12px 20px 20px;
-    z-index: 11;
+    z-index: 30;
+    max-height: min(70vh, calc(100dvh - 160px));
+    overflow-y: auto;
   }
 
-  nav.open {
+  .nav-bar nav.open {
     display: block;
   }
 
-  nav ul {
+  .nav-bar nav ul {
     flex-direction: column;
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-wrap: nowrap;
+    gap: 14px;
     align-items: stretch;
   }
 
-  nav a {
+  .nav-bar nav a {
     font-size: 16px;
   }
 
-  .has-sub > .submenu {
-    display: block;
-    position: static;
-    min-width: 0;
-    margin: 8px 0 4px 12px;
-    padding: 0;
-    border: 0;
-    box-shadow: none;
-    background: transparent;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: none;
-  }
-
-  .submenu a {
-    padding: 6px 0;
+  .nav-bar nav .submenu {
+    display: none;
   }
 }
 

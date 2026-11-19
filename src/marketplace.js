@@ -7,7 +7,7 @@ import {
   money,
   PRODUCT_CATEGORIES,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus } from "./lib/marketplaceUi.js";
+import { bindMarketLogout, marketToolbar, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const filters = document.querySelector("[data-browse-filters]");
@@ -45,11 +45,11 @@ function quantityField(product) {
 
 function addButton(product) {
   if ((Number(product.stock) || 0) < 1) {
-    return `<button type="button" class="btn btn-line" disabled>Out of stock</button>`;
+    return `<button type="button" class="btn btn-line" disabled><span data-en>Out of stock</span><span data-zh>缺貨</span></button>`;
   }
-  return `<button type="button" class="btn btn-navy" data-add-cart="${product.id}">
+  return `<span class="market-action-row"><button type="button" class="btn btn-navy" data-add-cart="${product.id}">
           <span data-en>Add to cart</span><span data-zh>加入購物車</span>
-        </button>`;
+        </button></span>`;
 }
 
 function productCard(product) {
@@ -131,22 +131,27 @@ function renderDetail(product) {
     </article>`;
 }
 
-async function handleAdd(id, profile) {
+async function handleAdd(button, profile) {
+  const id = button.dataset.addCart;
   const next = productId ? `marketplace.html?id=${id}` : "marketplace.html";
   if (!profile?.user) {
     window.location.href = loginHref(next);
     return;
   }
   if (!isBuyer(profile)) {
-    setStatus(status, "This account cannot buy in the marketplace.", "error");
+    showActionFeedback(button, "This account cannot buy in the marketplace.", "此帳號無法在市集購物。", "error");
     return;
   }
-  try {
-    await addToCart(id, requestedQty(id));
-    setStatus(status, "Added to cart. Open Cart to change quantity, then Checkout to place the order.");
-  } catch (err) {
-    setStatus(status, err.message || "Could not add to cart.", "error");
-  }
+  const result = await withBusy(button, () => addToCart(id, requestedQty(id)), {
+    busyEn: "Adding…",
+    busyZh: "加入中…",
+  });
+  if (result.error || result.skipped) return;
+  showActionFeedback(
+    button,
+    `Added to cart. <a href="marketplace-cart.html">Open Cart</a>`,
+    `已加入購物車。<a href="marketplace-cart.html">前往購物車</a>`
+  );
 }
 
 try {
@@ -186,7 +191,7 @@ try {
   document.body.addEventListener("click", (event) => {
     const button = event.target.closest("[data-add-cart]");
     if (!button) return;
-    handleAdd(button.dataset.addCart, profile);
+    handleAdd(button, profile);
   });
 } catch (err) {
   setStatus(status, err.message || "Could not load the marketplace.", "error");

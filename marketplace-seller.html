@@ -20,7 +20,7 @@
         <p class="lede" data-en>Manage only your own inventory: quantities, prices, and listing status. Buyers cannot order more than available stock.</p>
         <p class="lede" data-zh>僅能管理自己的庫存：數量、價格與刊登狀態。買家不能購買超過可售數量。</p>
         <div data-market-chrome></div>
-        <p>
+        <p class="market-action-row">
           <a class="btn btn-gold" href="marketplace-add-product.html">
             <span data-en>Add Product</span>
             <span data-zh>新增商品</span>
@@ -29,6 +29,7 @@
             <span data-en>Hide out-of-stock</span>
             <span data-zh>隱藏缺貨商品</span>
           </button>
+          <span class="market-action-feedback hidden" data-action-feedback role="status" aria-live="polite" aria-atomic="true" hidden></span>
         </p>
         <p class="status hidden" data-market-status hidden></p>
       </div>
@@ -73,7 +74,7 @@
     </section>
   </main>
   <script src="/js/data.js?v=20261116a"></script>
-  <script src="/js/site.js?v=20261117b"></script>
+  <script src="/js/site.js?v=20261119a"></script>
   <script type="module" src="/src/marketplace-seller.js"></script>
 </body>
 </html>

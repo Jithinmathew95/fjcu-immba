@@ -9,7 +9,7 @@ import {
   placeOrder,
   statusLabel,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus } from "./lib/marketplaceUi.js";
+import { bindMarketLogout, markBusy, markIdle, marketToolbar, setStatus, showActionFeedback } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const panel = document.querySelector("[data-checkout]");
@@ -117,12 +117,13 @@ function review(rows) {
     ${
       issues.length
         ? `<p>Update quantities in your <a href="marketplace-cart.html">cart</a> before placing the order.</p>`
-        : `<p>
+        : `<p class="market-action-row">
             <a class="btn btn-line" href="marketplace-cart.html">Back to cart</a>
             <button type="button" class="btn btn-gold" data-place-order>
               <span data-en>Place Order</span>
               <span data-zh>成立訂單</span>
             </button>
+            <span class="market-action-feedback hidden" data-action-feedback role="status" aria-live="polite" aria-atomic="true" hidden></span>
           </p>`
     }`;
 }
@@ -151,17 +152,19 @@ panel?.addEventListener("click", async (event) => {
   const button = event.target.closest("[data-place-order]");
   if (!button || placing) return;
   placing = true;
-  button.disabled = true;
-  button.textContent = "Placing order…";
+  if (!markBusy(button, "Saving…", "儲存中…")) {
+    placing = false;
+    return;
+  }
+  showActionFeedback(button, "", "");
   try {
-    setStatus(status, "Checking stock and creating your order…");
     const id = await placeOrder();
+    showActionFeedback(button, "Order placed", "訂單已成立");
     window.location.replace(`marketplace-checkout.html?order=${id}`);
   } catch (err) {
     placing = false;
-    button.disabled = false;
-    button.innerHTML = `<span data-en>Place Order</span><span data-zh>成立訂單</span>`;
-    setStatus(status, err.message || "Could not place the order.", "error");
+    markIdle(button);
+    showActionFeedback(button, err.message || "Could not place the order.", err.message || "無法成立訂單。", "error");
   }
 });
 

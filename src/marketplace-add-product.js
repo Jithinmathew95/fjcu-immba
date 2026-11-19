@@ -1,6 +1,14 @@
 import { requireSeller } from "./lib/auth.js";
 import { getProduct, saveProduct, uploadProductImage } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus } from "./lib/marketplaceUi.js";
+import {
+  bindMarketLogout,
+  fieldError,
+  markBusy,
+  markIdle,
+  marketToolbar,
+  setStatus,
+  showActionFeedback,
+} from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const status = document.querySelector("[data-market-status]");
@@ -14,6 +22,12 @@ if (!profile) throw new Error("Sign in required");
 if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace-add-product.html");
 bindMarketLogout();
 
+function idleLabel(creating) {
+  return creating
+    ? `<span data-en>Add Product</span><span data-zh>新增商品</span>`
+    : `<span data-en>Save changes</span><span data-zh>儲存變更</span>`;
+}
+
 function showPreview(url) {
   if (!preview) return;
   const img = preview.querySelector("img");
@@ -21,6 +35,15 @@ function showPreview(url) {
   preview.classList.toggle("hidden", !on);
   preview.hidden = !on;
   if (img) img.src = url || "";
+}
+
+function resetForm() {
+  form.reset();
+  form.elements.id.value = "";
+  showPreview("");
+  if (submitLabel) submitLabel.innerHTML = idleLabel(true);
+  if (submitLabel) submitLabel.dataset.idleHtml = submitLabel.innerHTML;
+  history.replaceState({}, "", "marketplace-add-product.html");
 }
 
 form?.elements.photo?.addEventListener("change", () => {
@@ -44,7 +67,8 @@ if (editId) {
       form.elements.status.value = product.is_active ? "active" : "hidden";
       showPreview(product.image_url);
       if (submitLabel) {
-        submitLabel.innerHTML = `<span data-en>Save changes</span><span data-zh>儲存變更</span>`;
+        submitLabel.innerHTML = idleLabel(false);
+        submitLabel.dataset.idleHtml = submitLabel.innerHTML;
       }
     }
   } catch (err) {
@@ -55,9 +79,17 @@ if (editId) {
 form?.addEventListener("submit", async (event) => {
   event.preventDefault();
   const button = form.querySelector("[type=submit]");
-  if (button) button.disabled = true;
+  if (!button || button.disabled) return;
+  if (!form.checkValidity()) {
+    const invalid = form.querySelector(":invalid");
+    const copy = fieldError(invalid);
+    showActionFeedback(button, copy.en, copy.zh, "error");
+    invalid?.focus();
+    return;
+  }
+  if (!markBusy(button, "Saving…", "儲存中…")) return;
+  showActionFeedback(button, "", "");
   try {
-    const creating = !form.elements.id.value;
     const file = form.elements.photo.files?.[0] || null;
     const product = await saveProduct({
       id: form.elements.id.value || "",
@@ -70,26 +102,20 @@ form?.addEventListener("submit", async (event) => {
       is_active: form.elements.status.value === "active",
     });
     if (file) {
-      const url = await uploadProductImage(profile.id, product.id, file);
-      showPreview(url);
+      await uploadProductImage(profile.id, product.id, file);
     }
-    form.elements.id.value = product.id;
-    form.elements.photo.value = "";
-    const live = form.elements.status.value === "active";
-    setStatus(
-      status,
-      live
-        ? creating
-          ? "Product added. It is now visible on the buyer browse page."
-          : "Product updated and visible on the buyer browse page."
-        : "Product saved as Hidden. Set status to Active to show it to buyers."
-    );
-    if (submitLabel) {
-      submitLabel.innerHTML = `<span data-en>Save changes</span><span data-zh>儲存變更</span>`;
-    }
+    markIdle(button);
+    resetForm();
+    showActionFeedback(button, "Product saved", "商品已儲存");
   } catch (err) {
-    setStatus(status, err.message || "Could not add the product.", "error");
-  } finally {
-    if (button) button.disabled = false;
+    markIdle(button);
+    const raw = err?.message || "Could not add the product.";
+    const zh =
+      raw.includes("2 MB")
+        ? "請選擇 2 MB 以下的圖片。"
+        : raw.includes("JPG")
+          ? "請選擇 JPG、PNG 或 WebP 圖片。"
+          : raw;
+    showActionFeedback(button, raw, zh, "error");
   }
 });

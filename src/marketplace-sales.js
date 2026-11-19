@@ -14,7 +14,7 @@ import {
   statusLabel,
   watchMarketplaceOrders,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus } from "./lib/marketplaceUi.js";
+import { bindMarketLogout, marketToolbar, setStatus, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const panel = document.querySelector("[data-sales]");
@@ -33,18 +33,25 @@ function thumb(item) {
     : `<div class="market-cart-thumb is-empty">No image</div>`;
 }
 
+let lastItemNote = null;
+
+function noteFor(id) {
+  if (!lastItemNote || lastItemNote.id !== id) return "";
+  return `<span class="market-action-feedback" data-action-feedback data-kind="info" role="status" aria-live="polite" aria-atomic="true"><span data-en>${lastItemNote.en}</span><span data-zh>${lastItemNote.zh}</span></span>`;
+}
+
 function actionFor(item) {
   const stage = itemStage(item);
   if (stage === "waiting_payment") {
-    return `<button type="button" class="btn btn-navy" data-pay="${item.id}">Confirm Payment</button>`;
+    return `<span class="market-action-row"><button type="button" class="btn btn-navy" data-pay="${item.id}"><span data-en>Confirm payment</span><span data-zh>確認付款</span></button>${noteFor(item.id)}</span>`;
   }
   if (stage === "ready_to_ship") {
-    return `<button type="button" class="btn btn-navy" data-ship="${item.id}">Confirm Shipment</button>`;
+    return `<span class="market-action-row"><button type="button" class="btn btn-navy" data-ship="${item.id}"><span data-en>Mark shipped</span><span data-zh>標記出貨</span></button>${noteFor(item.id)}</span>`;
   }
   if (stage === "shipped") {
-    return `Shipped ${formatStamp(item.shipped_at)}. Waiting for delivery confirmation.`;
+    return `Shipped ${formatStamp(item.shipped_at)}. Waiting for delivery confirmation. ${noteFor(item.id)}`;
   }
-  return `Completed ${formatStamp(item.completed_at) || ""}`.trim();
+  return `${`Completed ${formatStamp(item.completed_at) || ""}`.trim()} ${noteFor(item.id)}`;
 }
 
 function renderList(rows) {
@@ -157,19 +164,18 @@ async function render() {
 panel?.addEventListener("click", async (event) => {
   const pay = event.target.closest("[data-pay]");
   const ship = event.target.closest("[data-ship]");
-  try {
-    if (pay) {
-      await confirmPayment(pay.dataset.pay);
-      setStatus(status, "Payment confirmed. This sale is Ready to Ship.");
-      await render();
-    }
-    if (ship) {
-      await confirmShipment(ship.dataset.ship);
-      setStatus(status, "Shipment recorded. Status is Shipped.");
-      await render();
-    }
-  } catch (err) {
-    setStatus(status, err.message || "Could not update this sale.", "error");
+  if (pay) {
+    const result = await withBusy(pay, () => confirmPayment(pay.dataset.pay));
+    if (result.error || result.skipped) return;
+    lastItemNote = { id: pay.dataset.pay, en: "Payment confirmed", zh: "已確認付款" };
+    await render();
+    return;
+  }
+  if (ship) {
+    const result = await withBusy(ship, () => confirmShipment(ship.dataset.ship));
+    if (result.error || result.skipped) return;
+    lastItemNote = { id: ship.dataset.ship, en: "Marked shipped", zh: "已標記出貨" };
+    await render();
   }
 });
 

@@ -6,7 +6,7 @@ import {
   isSeller,
   loginHref,
 } from "./lib/auth.js";
-import { bindMarketLogout, marketToolbar, roleSummary, setStatus } from "./lib/marketplaceUi.js";
+import { bindMarketLogout, marketToolbar, roleSummary, setStatus, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const menus = document.querySelector("[data-role-menus]");
@@ -94,7 +94,7 @@ if (!profile?.user) {
             <h3 data-zh>成為賣家</h3>
             <p data-en>Keep your buyer account and also list books or course packs. You will only manage your own inventory.</p>
             <p data-zh>保留買家身分，同時刊登書籍或講義。您只能管理自己的庫存。</p>
-            <p><button type="button" class="btn btn-navy" data-become-seller>Enable seller tools</button></p>
+            <p class="market-action-row"><button type="button" class="btn btn-navy" data-become-seller><span data-en>Enable seller tools</span><span data-zh>啟用賣家功能</span></button></p>
           </div>`
     }
     ${
@@ -110,11 +110,9 @@ if (!profile?.user) {
     }`;
 
   menus.querySelector("[data-become-seller]")?.addEventListener("click", async () => {
-    try {
-      await becomeMarketplaceSeller();
-      window.location.reload();
-    } catch (err) {
-      setStatus(status, err.message || "Could not enable seller tools.", "error");
-    }
+    const button = menus.querySelector("[data-become-seller]");
+    const result = await withBusy(button, () => becomeMarketplaceSeller());
+    if (result.error || result.skipped) return;
+    window.location.reload();
   });
 }

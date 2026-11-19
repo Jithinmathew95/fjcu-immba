@@ -54,22 +54,30 @@
           <p class="meta" data-zh>每月銷售</p>
           <h2 data-en>Completed sales revenue</h2>
           <h2 data-zh>已完成銷售營收</h2>
-          <p class="lede" data-en>Bars are NT$ totals from completed transactions in each month. Empty months stay at zero.</p>
-          <p class="lede" data-zh>柱狀圖為各月已完成交易金額。沒有交易的月份為零。</p>
+          <p class="lede" data-en>Bars are NT$ totals the seller receives after platform fees from completed transactions in each month. Empty months stay at zero.</p>
+          <p class="lede" data-zh>柱狀圖為各月已完成交易扣除平台手續費後，賣家實收金額。沒有交易的月份為零。</p>
           <div data-chart></div>
         </article>
       </div>
     </section>
     <section class="section alt">
       <div class="wrap">
-        <h2 data-en>Sales history</h2>
-        <h2 data-zh>銷售紀錄</h2>
+        <div class="market-history-head">
+          <div>
+            <h2 data-en>Sales history</h2>
+            <h2 data-zh>銷售紀錄</h2>
+          </div>
+          <button type="button" class="btn btn-line" data-export-csv>
+            <span data-en>Export CSV</span>
+            <span data-zh>匯出 CSV</span>
+          </button>
+        </div>
         <div data-history></div>
       </div>
     </section>
   </main>
   <script src="/js/data.js?v=20261116a"></script>
-  <script src="/js/site.js?v=20261117b"></script>
+  <script src="/js/site.js?v=20261119a"></script>
   <script type="module" src="/src/marketplace-accounting.js"></script>
 </body>
 </html>

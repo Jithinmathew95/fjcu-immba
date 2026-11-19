@@ -322,6 +322,39 @@ export function lineAmount(item) {
   return Number(item?.unit_price || 0) * Number(item?.quantity || 0);
 }
 
+export function lineFee(item) {
+  const fee = Number(item?.platform_fee);
+  return Number.isFinite(fee) && fee > 0 ? fee : 0;
+}
+
+export function sellerReceive(item) {
+  return Math.max(0, lineAmount(item) - lineFee(item));
+}
+
+export async function getPlatformFee() {
+  const { data, error } = await need()
+    .from("marketplace_settings")
+    .select("platform_fee")
+    .eq("id", "default")
+    .maybeSingle();
+  if (error) throw error;
+  const fee = Number(data?.platform_fee);
+  return Number.isFinite(fee) && fee >= 0 ? fee : 4;
+}
+
+export async function setPlatformFee(value) {
+  const fee = Number(value);
+  if (!Number.isFinite(fee) || fee < 0) throw new Error("Platform fee must be 0 or more.");
+  const { data, error } = await need()
+    .from("marketplace_settings")
+    .update({ platform_fee: fee, updated_at: new Date().toISOString() })
+    .eq("id", "default")
+    .select("id")
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) throw new Error("Platform fee is not in the database yet. Paste supabase/marketplace-fee.sql in the SQL Editor first.");
+}
+
 export function transactionDate(order, item) {
   const stage = itemStage(item);
   if (stage === "completed") return item.completed_at || order.created_at;

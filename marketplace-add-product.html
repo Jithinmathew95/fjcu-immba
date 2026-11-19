@@ -25,7 +25,7 @@
     </header>
     <section class="section">
       <div class="wrap admin-login">
-        <form class="form card" data-add-product-form>
+        <form class="form card" data-add-product-form novalidate>
           <input type="hidden" name="id">
           <label>
             <span data-en>Product Name</span>
@@ -72,11 +72,12 @@
               <option value="hidden">Hidden</option>
             </select>
           </label>
-          <p>
+          <p class="market-action-row">
             <button class="btn btn-navy" type="submit" data-submit-label>
               <span data-en>Add Product</span>
               <span data-zh>新增商品</span>
             </button>
+            <span class="market-action-feedback hidden" data-action-feedback role="status" aria-live="polite" aria-atomic="true" hidden></span>
             <a class="btn btn-line" href="marketplace-seller.html">
               <span data-en>Back to seller cabinet</span>
               <span data-zh>返回賣家後台</span>
@@ -87,7 +88,7 @@
     </section>
   </main>
   <script src="/js/data.js?v=20261116a"></script>
-  <script src="/js/site.js?v=20261117b"></script>
+  <script src="/js/site.js?v=20261119a"></script>
   <script type="module" src="/src/marketplace-add-product.js"></script>
 </body>
 </html>

@@ -12,12 +12,13 @@ import {
   statusLabel,
   watchMarketplaceOrders,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus } from "./lib/marketplaceUi.js";
+import { bindMarketLogout, marketToolbar, setStatus, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const list = document.querySelector("[data-orders]");
 const status = document.querySelector("[data-market-status]");
 const orderId = new URLSearchParams(window.location.search).get("id");
+let lastItemNote = null;
 
 const profile = await requireBuyer("marketplace-orders.html");
 if (!profile) throw new Error("Sign in required");
@@ -135,8 +136,14 @@ async function renderDetail(order) {
           ${timeline(item)}
           ${
             stage === "shipped"
-              ? `<p><button type="button" class="btn btn-navy" data-deliver="${item.id}">Confirm delivery</button></p>`
-              : ""
+              ? `<p class="market-action-row"><button type="button" class="btn btn-navy" data-deliver="${item.id}"><span data-en>Confirm delivery</span><span data-zh>確認收貨</span></button>${
+                  lastItemNote?.id === item.id
+                    ? `<span class="market-action-feedback" data-action-feedback role="status" aria-live="polite" aria-atomic="true"><span data-en>${lastItemNote.en}</span><span data-zh>${lastItemNote.zh}</span></span>`
+                    : ""
+                }</p>`
+              : lastItemNote?.id === item.id
+                ? `<p class="market-action-feedback" data-action-feedback role="status" aria-live="polite" aria-atomic="true"><span data-en>${lastItemNote.en}</span><span data-zh>${lastItemNote.zh}</span></p>`
+                : ""
           }
         </div>`;
         })
@@ -164,13 +171,10 @@ async function render() {
 list?.addEventListener("click", async (event) => {
   const button = event.target.closest("[data-deliver]");
   if (!button) return;
-  try {
-    await confirmDelivery(button.dataset.deliver);
-    setStatus(status, "Delivery confirmed. This purchase stays in My Orders as Completed.");
-    await render();
-  } catch (err) {
-    setStatus(status, err.message || "Could not confirm delivery.", "error");
-  }
+  const result = await withBusy(button, () => confirmDelivery(button.dataset.deliver));
+  if (result.error || result.skipped) return;
+  lastItemNote = { id: button.dataset.deliver, en: "Delivery confirmed", zh: "已確認收貨" };
+  await render();
 });
 
 try {
