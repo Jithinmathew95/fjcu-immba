@@ -17,8 +17,15 @@
         <p class="kicker" style="color:var(--gold)">Marketplace</p>
         <h1 data-en>Your marketplace desk</h1>
         <h1 data-zh>市集工作台</h1>
-        <p class="lede" data-market-who></p>
-        <div data-market-chrome></div>
+        <p class="lede" data-market-who>
+          <span data-en>Checking sign-in…</span>
+          <span data-zh>正在確認登入…</span>
+        </p>
+        <div data-market-chrome>
+          <nav class="market-toolbar" aria-busy="true" aria-live="polite">
+            <span class="market-auth-pending"><span data-en>Checking sign-in…</span><span data-zh>正在確認登入…</span></span>
+          </nav>
+        </div>
         <p class="status hidden" data-market-status hidden></p>
       </div>
     </header>

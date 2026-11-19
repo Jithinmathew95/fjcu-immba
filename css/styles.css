@@ -1308,10 +1308,41 @@ a.btn.link-action::after {
   outline-offset: 2px;
 }
 
-.market-who {
+.market-auth-known {
   margin-left: auto;
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+  min-width: 0;
+}
+
+.market-who {
+  margin-left: 0;
   color: var(--ink);
   font-weight: 700;
+  overflow-wrap: break-word;
+  word-break: normal;
+  text-align: right;
+}
+
+.market-auth-pending,
+[data-admin-checking] {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.admin-session-known {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  margin: 0;
+}
+
+.admin-session-who {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .market-card p {
@@ -1487,20 +1518,97 @@ a.btn.link-action::after {
   gap: 12px;
   align-items: flex-start;
   min-width: 0;
-  max-width: 28ch;
 }
 
-.market-product-cell strong,
-.market-seller-cell {
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  white-space: normal;
+.market-product-cell .market-cart-thumb {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+}
+
+.market-product-title {
+  min-width: 0;
+  flex: 1;
+}
+
+.market-product-title-visual {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
 }
 
 .market-seller-cell {
   display: block;
-  min-width: 8ch;
-  max-width: 22ch;
+  min-width: 0;
+  max-width: 18ch;
+}
+
+.market-seller-cell-visual {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.market-order-table {
+  table-layout: fixed;
+}
+
+.market-order-table .col-order-id {
+  width: 7.5rem;
+}
+
+.market-order-table .col-qty {
+  width: 4.25rem;
+}
+
+.market-order-table .col-product {
+  width: 36%;
+}
+
+.market-order-table .col-seller,
+.market-order-table .col-buyer {
+  width: 12rem;
+}
+
+.market-order-cards {
+  display: none;
+}
+
+.market-order-phone-card {
+  padding: 16px 18px;
+}
+
+.market-order-phone-row {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.market-order-phone-row:last-child {
+  margin-bottom: 0;
+}
+
+.market-order-phone-row .meta {
+  margin: 0;
+}
+
+.market-order-phone-card .market-product-cell .market-cart-thumb {
+  width: 72px;
+  height: 72px;
+  flex-basis: 72px;
+}
+
+.market-order-phone-card .market-seller-cell {
+  max-width: 100%;
 }
 
 .market-order-uuid {
@@ -1622,8 +1730,9 @@ a.btn.link-action::after {
   padding: 12px 14px;
   border-bottom: 1px solid var(--line);
   vertical-align: top;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
 }
 
 .admin-table th {
@@ -1835,6 +1944,15 @@ a.btn.link-action::after {
 
   .market-steps {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .market-order-table-wrap {
+    display: none;
+  }
+
+  .market-order-cards {
+    display: grid;
+    gap: 16px;
   }
 
   .faculty-photo {

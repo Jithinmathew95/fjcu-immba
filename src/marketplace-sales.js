@@ -14,7 +14,7 @@ import {
   statusLabel,
   watchMarketplaceOrders,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, productCellHtml, publicOrderCode, setStatus, withBusy } from "./lib/marketplaceUi.js";
+import { orderPhoneCard, orderViewsHtml, paintMarketToolbar, personNameHtml, productCellHtml, publicOrderCode, setStatus, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const panel = document.querySelector("[data-sales]");
@@ -23,8 +23,7 @@ const orderId = new URLSearchParams(window.location.search).get("id");
 
 const profile = await requireSeller("marketplace-sales.html");
 if (!profile) throw new Error("Sign in required");
-if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace-sales.html");
-bindMarketLogout();
+paintMarketToolbar(toolbar, profile, "marketplace-sales.html");
 
 function thumb(item) {
   const src = lineImage(item);
@@ -59,28 +58,22 @@ function renderList(rows) {
     panel.innerHTML = `<p>No sales yet. Completed sales will remain in this history.</p>`;
     return;
   }
-  panel.innerHTML = `<div class="admin-table-wrap">
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Buyer</th>
-          <th>Purchased products</th>
-          <th>Qty</th>
+  panel.innerHTML = orderViewsHtml({
+    headers: `<th class="col-order-id">Order ID</th>
+          <th class="col-buyer">Buyer</th>
+          <th class="col-product">Purchased products</th>
+          <th class="col-qty">Qty</th>
           <th>Total</th>
           <th>Order date</th>
           <th>Payment status</th>
           <th>Order status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows
-          .map(
-            ({ order, item }) => `
+          <th>Action</th>`,
+    body: rows
+      .map(
+        ({ order, item }) => `
           <tr>
             <td>${publicOrderCode(order)}</td>
-            <td>${order.buyer_email}</td>
+            <td>${personNameHtml(order.buyer_email, "Buyer")}</td>
             <td>${productCellHtml(item)}</td>
             <td>${item.quantity}</td>
             <td>${money(Number(item.unit_price) * Number(item.quantity))}</td>
@@ -92,11 +85,26 @@ function renderList(rows) {
               ${actionFor(item)}
             </td>
           </tr>`
-          )
-          .join("")}
-      </tbody>
-    </table>
-  </div>`;
+      )
+      .join(""),
+    cards: rows
+      .map(({ order, item }) =>
+        orderPhoneCard([
+          { en: "Order ID", zh: "訂單編號", html: publicOrderCode(order) },
+          { en: "Product", zh: "商品", html: productCellHtml(item) },
+          { en: "Buyer", zh: "買家", html: personNameHtml(order.buyer_email, "Buyer") },
+          { en: "Qty", zh: "數量", html: String(item.quantity) },
+          { en: "Total", zh: "合計", html: money(Number(item.unit_price) * Number(item.quantity)) },
+          { en: "Status", zh: "狀態", html: `${paymentLabel(item)} · ${itemStatusLabel(itemStage(item))}` },
+          {
+            en: "Action",
+            zh: "操作",
+            html: `<span class="admin-actions"><a class="btn btn-line" href="marketplace-sales.html?id=${order.id}"><span data-en>View details</span><span data-zh>查看詳情</span></a>${actionFor(item)}</span>`,
+          },
+        ])
+      )
+      .join(""),
+  });
 }
 
 async function renderDetail(order, mine) {

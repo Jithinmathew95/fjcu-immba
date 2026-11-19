@@ -1,5 +1,6 @@
 import { fetchAllAnnouncements, replaceAllAnnouncements } from "./lib/newsApi.js";
 import { requireStaff, signOut, supabase } from "./lib/auth.js";
+import { hideAdminChecking, revealAdminSession } from "./lib/sessionChrome.js";
 
 const office = document.querySelector("[data-admin-office]");
 const status = document.querySelector("[data-admin-status]");
@@ -21,8 +22,10 @@ function setLoginStatus(message, kind) {
 }
 
 function showOffice(user) {
+  hideAdminChecking();
   setVisible(office, true);
   setVisible(sessionBar, true);
+  revealAdminSession({ user, email: user.email });
   if (emailLabel) emailLabel.textContent = user.email || "Signed in";
 }
 

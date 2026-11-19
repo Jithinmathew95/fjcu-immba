@@ -12,7 +12,7 @@ import {
   statusLabel,
   watchMarketplaceOrders,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, productCellHtml, publicOrderCode, sellerNameHtml, setStatus, withBusy } from "./lib/marketplaceUi.js";
+import { orderPhoneCard, orderViewsHtml, paintMarketToolbar, productCellHtml, publicOrderCode, sellerNameHtml, setStatus, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const list = document.querySelector("[data-orders]");
@@ -22,8 +22,7 @@ let lastItemNote = null;
 
 const profile = await requireBuyer("marketplace-orders.html");
 if (!profile) throw new Error("Sign in required");
-if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace-orders.html");
-bindMarketLogout();
+paintMarketToolbar(toolbar, profile, "marketplace-orders.html");
 
 const STAGES = ["waiting_payment", "ready_to_ship", "shipped", "completed"];
 
@@ -60,25 +59,19 @@ function renderList(orders) {
     list.innerHTML = `<p>You have no orders yet. Completed purchases will stay listed here.</p>`;
     return;
   }
-  list.innerHTML = `<div class="admin-table-wrap">
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Product</th>
-          <th>Seller</th>
-          <th>Qty</th>
+  list.innerHTML = orderViewsHtml({
+    headers: `<th class="col-order-id">Order ID</th>
+          <th class="col-product">Product</th>
+          <th class="col-seller">Seller</th>
+          <th class="col-qty">Qty</th>
           <th>Total</th>
           <th>Order date</th>
           <th>Payment status</th>
           <th>Order status</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows
-          .map(
-            ({ order, item }) => `
+          <th></th>`,
+    body: rows
+      .map(
+        ({ order, item }) => `
           <tr>
             <td>${publicOrderCode(order)}</td>
             <td>${productCellHtml(item)}</td>
@@ -90,11 +83,26 @@ function renderList(orders) {
             <td>${itemStatusLabel(itemStage(item))}</td>
             <td><a class="btn btn-line" href="marketplace-orders.html?id=${order.id}">View details</a></td>
           </tr>`
-          )
-          .join("")}
-      </tbody>
-    </table>
-  </div>`;
+      )
+      .join(""),
+    cards: rows
+      .map(({ order, item }) =>
+        orderPhoneCard([
+          { en: "Order ID", zh: "訂單編號", html: publicOrderCode(order) },
+          { en: "Product", zh: "商品", html: productCellHtml(item) },
+          { en: "Seller", zh: "賣家", html: sellerNameHtml(item) },
+          { en: "Qty", zh: "數量", html: String(item.quantity) },
+          { en: "Total", zh: "合計", html: money(Number(item.unit_price) * Number(item.quantity)) },
+          { en: "Status", zh: "狀態", html: `${paymentLabel(item)} · ${itemStatusLabel(itemStage(item))}` },
+          {
+            en: "Details",
+            zh: "詳情",
+            html: `<a class="btn btn-line" href="marketplace-orders.html?id=${order.id}"><span data-en>View details</span><span data-zh>查看詳情</span></a>`,
+          },
+        ])
+      )
+      .join(""),
+  });
 }
 
 async function renderDetail(order) {

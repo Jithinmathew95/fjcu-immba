@@ -152,18 +152,35 @@ resetForm?.addEventListener("submit", async (event) => {
 
 bindPasswordToggles();
 
+function showLoginReady() {
+  const checking = document.querySelector("[data-login-checking]");
+  const ready = document.querySelector("[data-login-ready]");
+  if (checking) {
+    checking.hidden = true;
+    checking.classList.add("hidden");
+  }
+  if (ready) {
+    ready.hidden = false;
+    ready.classList.remove("hidden");
+  }
+}
+
 if (!supabase) {
+  showLoginReady();
   setStatus(supabaseConfigError, supabaseConfigError, "error");
 } else {
   const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
   const query = new URLSearchParams(window.location.search);
   if (hash.get("type") === "recovery" || query.get("type") === "recovery") {
+    showLoginReady();
     showPanel("reset");
     setStatus("Choose a new password.", "請設定新密碼。");
   } else {
     const user = await getSessionUser();
     if (user) {
       window.location.replace(afterSignInPath());
+    } else {
+      showLoginReady();
     }
   }
 }

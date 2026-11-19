@@ -17,7 +17,7 @@ import {
   transactionDate,
   watchMarketplaceOrders,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, productCellHtml, publicOrderCode, setStatus } from "./lib/marketplaceUi.js";
+import { orderPhoneCard, orderViewsHtml, paintMarketToolbar, personNameHtml, productCellHtml, publicOrderCode, setStatus } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const status = document.querySelector("[data-market-status]");
@@ -32,8 +32,7 @@ const exportBtn = document.querySelector("[data-export-csv]");
 
 const profile = await requireSeller("marketplace-accounting.html");
 if (!profile) throw new Error("Sign in required");
-if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace-accounting.html");
-bindMarketLogout();
+paintMarketToolbar(toolbar, profile, "marketplace-accounting.html");
 
 let rows = [];
 
@@ -164,32 +163,26 @@ function renderHistory() {
     historyEl.innerHTML = `<p>No sales match these filters. Completed transactions stay in this history.</p>`;
     return;
   }
-  historyEl.innerHTML = `<div class="admin-table-wrap">
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>Order ID</th>
+  historyEl.innerHTML = orderViewsHtml({
+    headers: `<th class="col-order-id">Order ID</th>
           <th>Transaction ID</th>
-          <th>Buyer Name</th>
-          <th>Product Name</th>
-          <th>Quantity</th>
+          <th class="col-buyer">Buyer Name</th>
+          <th class="col-product">Product Name</th>
+          <th class="col-qty">Quantity</th>
           <th>Unit Price</th>
           <th>Total Amount</th>
           <th><span data-en>Platform fee</span><span data-zh>平台手續費</span></th>
           <th><span data-en>You receive</span><span data-zh>您實收</span></th>
           <th>Payment Status</th>
           <th>Transaction Status</th>
-          <th>Transaction Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${visible
-          .map(({ order, item }) => {
-            const amount = lineAmount(item);
-            return `<tr>
+          <th>Transaction Date</th>`,
+    body: visible
+      .map(({ order, item }) => {
+        const amount = lineAmount(item);
+        return `<tr>
               <td>${publicOrderCode(order)}</td>
               <td><span class="market-order-uuid">${item.id}</span></td>
-              <td>${order.buyer_email || "Buyer"}</td>
+              <td>${personNameHtml(order.buyer_email, "Buyer")}</td>
               <td>${productCellHtml(item)}</td>
               <td>${item.quantity}</td>
               <td>${money(item.unit_price)}</td>
@@ -200,11 +193,23 @@ function renderHistory() {
               <td>${itemStatusLabel(itemStage(item))}</td>
               <td>${formatStamp(transactionDate(order, item))}</td>
             </tr>`;
-          })
-          .join("")}
-      </tbody>
-    </table>
-  </div>`;
+      })
+      .join(""),
+    cards: visible
+      .map(({ order, item }) => {
+        const amount = lineAmount(item);
+        return orderPhoneCard([
+          { en: "Order ID", zh: "訂單編號", html: publicOrderCode(order) },
+          { en: "Product", zh: "商品", html: productCellHtml(item) },
+          { en: "Buyer", zh: "買家", html: personNameHtml(order.buyer_email, "Buyer") },
+          { en: "Qty", zh: "數量", html: String(item.quantity) },
+          { en: "Total", zh: "合計", html: money(amount) },
+          { en: "Status", zh: "狀態", html: `${paymentLabel(item)} · ${itemStatusLabel(itemStage(item))}` },
+          { en: "You receive", zh: "您實收", html: money(sellerReceive(item)) },
+        ]);
+      })
+      .join(""),
+  });
 }
 
 function csvCell(value) {

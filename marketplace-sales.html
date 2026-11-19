@@ -19,7 +19,11 @@
         <h1 data-zh>我的銷售</h1>
         <p class="lede" data-en>Only sales of your products appear here, including completed transactions. Process payment and shipment for your own lines.</p>
         <p class="lede" data-zh>僅顯示您的商品銷售，包含已完成交易。您只能處理自己的訂單明細。</p>
-        <div data-market-chrome></div>
+        <div data-market-chrome>
+          <nav class="market-toolbar" aria-busy="true" aria-live="polite">
+            <span class="market-auth-pending"><span data-en>Checking sign-in…</span><span data-zh>正在確認登入…</span></span>
+          </nav>
+        </div>
         <p class="status hidden" data-market-status hidden></p>
       </div>
     </header>

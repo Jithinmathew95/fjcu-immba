@@ -17,16 +17,22 @@
         <p class="kicker" style="color:var(--gold)">Back-office</p>
         <h1 data-en>Staff home</h1>
         <h1 data-zh>同仁後台</h1>
-        <p class="lede">
-          <span data-en>Signed in as</span>
-          <span data-zh>登入身分</span>
-          <strong data-admin-email></strong>
-          <span data-admin-role-wrap hidden> · <span data-admin-role></span></span>
+        <p class="lede" data-admin-checking>
+          <span data-en>Checking sign-in…</span>
+          <span data-zh>正在確認登入…</span>
+        </p>
+        <div class="lede admin-session-known hidden" data-admin-session hidden>
+          <p class="admin-session-who">
+            <span data-en>Signed in as</span>
+            <span data-zh>登入身分</span>
+            <strong data-admin-email></strong>
+            <span data-admin-role-wrap hidden> · <span data-admin-role></span></span>
+          </p>
           <button type="button" class="btn btn-line" data-logout>
             <span data-en>Sign out</span>
             <span data-zh>登出</span>
           </button>
-        </p>
+        </div>
         <p class="status hidden" data-admin-status hidden></p>
       </div>
     </header>

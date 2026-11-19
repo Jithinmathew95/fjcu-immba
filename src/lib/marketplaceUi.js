@@ -1,6 +1,18 @@
 import { isBuyer, isPlatformAdmin, isSeller, loginHref, signOut } from "./auth.js";
 import { lineImage } from "./marketplaceApi.js";
 
+export function marketCheckingToolbar() {
+  return `<nav class="market-toolbar" aria-busy="true" aria-live="polite">
+      <span class="market-auth-pending"><span data-en>Checking sign-in…</span><span data-zh>正在確認登入…</span></span>
+    </nav>`;
+}
+
+export function paintMarketToolbar(el, profile, current) {
+  if (!el) return;
+  el.innerHTML = marketToolbar(profile, current);
+  bindMarketLogout();
+}
+
 export function marketToolbar(profile, current) {
   const signedIn = Boolean(profile?.user);
   const links = [
@@ -22,10 +34,12 @@ export function marketToolbar(profile, current) {
     links.push(["marketplace-admin.html", "Admin", "市集管理員"]);
   }
   const auth = signedIn
-    ? `<span class="market-who">${profile.email || profile.user.email || ""}</span>
-       <button type="button" class="btn btn-line" data-market-logout>
-         <span data-en>Sign out</span><span data-zh>登出</span>
-       </button>`
+    ? `<span class="market-auth-known">
+         <span class="market-who">${profile.email || profile.user.email || ""}</span>
+         <button type="button" class="btn btn-line" data-market-logout>
+           <span data-en>Sign out</span><span data-zh>登出</span>
+         </button>
+       </span>`
     : `<a class="btn btn-navy market-toolbar-auth" href="${loginHref(current)}">
          <span data-en>Sign in</span><span data-zh>登入</span>
        </a>`;
@@ -85,10 +99,20 @@ export function adminOrderCode(order) {
   return `${code}<br><span class="market-order-uuid">${escHtml(order.id)}</span>`;
 }
 
+function clampName(text, extraClass = "") {
+  const safe = escHtml(String(text || "").trim());
+  return `<span class="market-seller-cell ${extraClass}" title="${safe}"><span class="visually-hidden">${safe}</span><span class="market-seller-cell-visual" aria-hidden="true">${safe}</span></span>`;
+}
+
 export function sellerNameHtml(item) {
   const name = String(item?.seller_label || "").trim();
-  if (name) return `<span class="market-seller-cell">${escHtml(name)}</span>`;
-  return `<span class="market-seller-cell"><span data-en>Campus seller</span><span data-zh>校園賣家</span></span>`;
+  if (name) return clampName(name);
+  return `<span class="market-seller-cell" title="Campus seller"><span class="visually-hidden"><span data-en>Campus seller</span><span data-zh>校園賣家</span></span><span class="market-seller-cell-visual" aria-hidden="true"><span data-en>Campus seller</span><span data-zh>校園賣家</span></span></span>`;
+}
+
+export function personNameHtml(name, fallback = "—") {
+  const text = String(name || "").trim() || fallback;
+  return clampName(text);
 }
 
 export function productCellHtml(item) {
@@ -96,7 +120,32 @@ export function productCellHtml(item) {
   const photo = src
     ? `<img class="market-cart-thumb" src="${escHtml(src)}" alt="">`
     : `<div class="market-cart-thumb is-empty"><span data-en>No image</span><span data-zh>無圖片</span></div>`;
-  return `<div class="market-product-cell">${photo}<strong>${escHtml(item?.title || "")}</strong></div>`;
+  const title = escHtml(item?.title || "");
+  return `<div class="market-product-cell">${photo}<span class="market-product-title" title="${title}"><span class="visually-hidden">${title}</span><span class="market-product-title-visual" aria-hidden="true">${title}</span></span></div>`;
+}
+
+export function orderPhoneCard(fields) {
+  return `<article class="card market-order-phone-card">${fields
+    .map(
+      ({ en, zh, html }) =>
+        `<div class="market-order-phone-row">
+          <p class="meta"><span data-en>${en}</span><span data-zh>${zh || en}</span></p>
+          <div>${html}</div>
+        </div>`
+    )
+    .join("")}</article>`;
+}
+
+export function orderViewsHtml({ headers, body, cards }) {
+  return `<div class="market-order-views">
+    <div class="admin-table-wrap market-order-table-wrap">
+      <table class="admin-table market-order-table">
+        <thead><tr>${headers}</tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>
+    <div class="market-order-cards">${cards}</div>
+  </div>`;
 }
 
 const KNOWN_ERRORS = {

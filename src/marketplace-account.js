@@ -6,7 +6,7 @@ import {
   isSeller,
   loginHref,
 } from "./lib/auth.js";
-import { bindMarketLogout, marketToolbar, roleSummary, setStatus, withBusy } from "./lib/marketplaceUi.js";
+import { paintMarketToolbar, roleSummary, setStatus, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const menus = document.querySelector("[data-role-menus]");
@@ -17,8 +17,7 @@ const profile = await getProfile().catch(() => null);
 if (!profile?.user) {
   window.location.replace(loginHref("marketplace-account.html"));
 } else {
-  if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace-account.html");
-  bindMarketLogout();
+  paintMarketToolbar(toolbar, profile, "marketplace-account.html");
   if (who) who.textContent = `${profile.email || profile.user.email} · ${roleSummary(profile)}`;
 
   const buyer = isBuyer(profile);

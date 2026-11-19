@@ -12,7 +12,7 @@ import {
   setPlatformFee,
   statusLabel,
 } from "./lib/marketplaceApi.js";
-import { adminOrderCode, bindMarketLogout, fieldError, marketToolbar, productCellHtml, sellerNameHtml, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
+import { adminOrderCode, fieldError, orderPhoneCard, orderViewsHtml, paintMarketToolbar, personNameHtml, productCellHtml, sellerNameHtml, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const status = document.querySelector("[data-market-status]");
@@ -27,8 +27,7 @@ const feeInput = document.querySelector("[data-platform-fee]");
 
 const profile = await requirePlatformAdmin("marketplace-admin.html");
 if (!profile) throw new Error("Sign in required");
-if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace-admin.html");
-bindMarketLogout();
+paintMarketToolbar(toolbar, profile, "marketplace-admin.html");
 
 let orders = [];
 let lastUserNote = null;
@@ -156,24 +155,21 @@ function renderOrders() {
       </article>
     </div>`;
   }
+  const lineRows = visible.flatMap((order) => (order.marketplace_order_items || []).map((item) => ({ order, item })));
   ordersEl.innerHTML = visible.length
-    ? `<div class="admin-table-wrap"><table class="admin-table">
-        <thead><tr>
-          <th><span data-en>Order ID</span><span data-zh>訂單編號</span></th>
-          <th><span data-en>Buyer</span><span data-zh>買家</span></th>
-          <th><span data-en>Product</span><span data-zh>商品</span></th>
-          <th><span data-en>Seller</span><span data-zh>賣家</span></th>
+    ? orderViewsHtml({
+        headers: `<th class="col-order-id"><span data-en>Order ID</span><span data-zh>訂單編號</span></th>
+          <th class="col-buyer"><span data-en>Buyer</span><span data-zh>買家</span></th>
+          <th class="col-product"><span data-en>Product</span><span data-zh>商品</span></th>
+          <th class="col-seller"><span data-en>Seller</span><span data-zh>賣家</span></th>
           <th><span data-en>Overall</span><span data-zh>整單狀態</span></th>
-          <th><span data-en>Line</span><span data-zh>明細</span></th>
-        </tr></thead>
-        <tbody>
-          ${visible
-            .flatMap((order) =>
-              (order.marketplace_order_items || []).map(
-                (item) => `
+          <th><span data-en>Line</span><span data-zh>明細</span></th>`,
+        body: lineRows
+          .map(
+            ({ order, item }) => `
             <tr>
               <td>${adminOrderCode(order)}</td>
-              <td>${order.buyer_email}</td>
+              <td>${personNameHtml(order.buyer_email, "Buyer")}</td>
               <td>${productCellHtml(item)}</td>
               <td>${sellerNameHtml(item)}</td>
               <td>${statusLabel(order.status)}</td>
@@ -183,10 +179,22 @@ function renderOrders() {
                 ${item.completed_at ? ` · completed ${formatStamp(item.completed_at)}` : ""}
               </td>
             </tr>`
-              )
-            )
-            .join("")}
-        </tbody></table></div>`
+          )
+          .join(""),
+        cards: lineRows
+          .map(({ order, item }) =>
+            orderPhoneCard([
+              { en: "Order ID", zh: "訂單編號", html: adminOrderCode(order) },
+              { en: "Product", zh: "商品", html: productCellHtml(item) },
+              { en: "Seller", zh: "賣家", html: sellerNameHtml(item) },
+              { en: "Qty", zh: "數量", html: String(item.quantity) },
+              { en: "Total", zh: "合計", html: money(lineAmount(item)) },
+              { en: "Status", zh: "狀態", html: `${statusLabel(order.status)} · ${itemStatusLabel(itemStage(item))}` },
+              { en: "Buyer", zh: "買家", html: personNameHtml(order.buyer_email, "Buyer") },
+            ])
+          )
+          .join(""),
+      })
     : `<p><span data-en>No matching transactions.</span><span data-zh>沒有符合的交易。</span></p>`;
 }
 

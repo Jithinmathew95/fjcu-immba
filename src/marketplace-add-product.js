@@ -1,11 +1,10 @@
 import { requireSeller } from "./lib/auth.js";
 import { getProduct, saveProduct, uploadProductImage } from "./lib/marketplaceApi.js";
 import {
-  bindMarketLogout,
   fieldError,
   markBusy,
   markIdle,
-  marketToolbar,
+  paintMarketToolbar,
   setStatus,
   showActionFeedback,
 } from "./lib/marketplaceUi.js";
@@ -19,8 +18,7 @@ const editId = new URLSearchParams(window.location.search).get("id");
 
 const profile = await requireSeller("marketplace-add-product.html");
 if (!profile) throw new Error("Sign in required");
-if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace-add-product.html");
-bindMarketLogout();
+paintMarketToolbar(toolbar, profile, "marketplace-add-product.html");
 
 function idleLabel(creating) {
   return creating

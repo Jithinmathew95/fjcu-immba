@@ -16,7 +16,7 @@ import {
   updateInventory,
   watchMarketplaceOrders,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, productCellHtml, publicOrderCode, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
+import { orderPhoneCard, orderViewsHtml, paintMarketToolbar, personNameHtml, productCellHtml, publicOrderCode, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const status = document.querySelector("[data-market-status]");
@@ -29,8 +29,7 @@ const completedEl = document.querySelector("[data-seller-completed]");
 
 const profile = await requireSeller("marketplace-seller.html");
 if (!profile) throw new Error("Sign in required");
-if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace-seller.html");
-bindMarketLogout();
+paintMarketToolbar(toolbar, profile, "marketplace-seller.html");
 
 function badge(product) {
   const flag = stockFlags(product.available_stock);
@@ -153,41 +152,52 @@ function renderStage(el, rows, stage) {
   }
   el.innerHTML = groupOrders(rows)
     .map(({ order, items }) => {
-      return `<div class="admin-table-wrap market-order-block">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Buyer</th>
-              <th>Products</th>
-              <th>Qty</th>
+      const cards = items
+        .map((item) =>
+          orderPhoneCard([
+            { en: "Order ID", zh: "訂單編號", html: publicOrderCode(order) },
+            { en: "Product", zh: "商品", html: productCellHtml(item) },
+            { en: "Buyer", zh: "買家", html: personNameHtml(order.buyer_email, "Buyer") },
+            { en: "Qty", zh: "數量", html: String(item.quantity) },
+            { en: "Total", zh: "合計", html: money(Number(item.unit_price) * Number(item.quantity)) },
+            { en: "Status", zh: "狀態", html: itemStatusLabel(itemStage(item)) },
+            { en: "Action", zh: "操作", html: actionCell(item, stage) },
+          ])
+        )
+        .join("");
+      return `<div class="market-order-block">${orderViewsHtml({
+        headers: `<th class="col-order-id">Order ID</th>
+              <th class="col-buyer">Buyer</th>
+              <th class="col-product">Products</th>
+              <th class="col-qty">Qty</th>
               <th>Total</th>
               <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${items
-              .map(
-                (item) => `
+              <th>Action</th>`,
+        body:
+          items
+            .map(
+              (item) => `
               <tr>
                 <td>${publicOrderCode(order)}</td>
-                <td>${order.buyer_email}</td>
+                <td>${personNameHtml(order.buyer_email, "Buyer")}</td>
                 <td>${productCellHtml(item)}</td>
                 <td>${item.quantity}</td>
                 <td>${money(Number(item.unit_price) * Number(item.quantity))}</td>
                 <td>${itemStatusLabel(itemStage(item))}</td>
                 <td>${actionCell(item, stage)}</td>
               </tr>`
-              )
-              .join("")}
-            <tr>
+            )
+            .join("") +
+          `<tr>
               <td colspan="4"><strong>Seller subtotal for this order</strong></td>
               <td colspan="3"><strong>${money(sellerTotal(items))}</strong></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>`;
+            </tr>`,
+        cards:
+          cards +
+          orderPhoneCard([
+            { en: "Seller subtotal for this order", zh: "此單賣家小計", html: `<strong>${money(sellerTotal(items))}</strong>` },
+          ]),
+      })}</div>`;
     })
     .join("");
 }

@@ -7,7 +7,7 @@ import {
   money,
   PRODUCT_CATEGORIES,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
+import { paintMarketToolbar, setStatus, showActionFeedback, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const filters = document.querySelector("[data-browse-filters]");
@@ -156,8 +156,7 @@ async function handleAdd(button, profile) {
 
 try {
   const profile = await getProfile().catch(() => null);
-  if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace.html");
-  bindMarketLogout();
+  paintMarketToolbar(toolbar, profile, "marketplace.html");
 
   if (filters?.elements.category) {
     filters.elements.category.innerHTML =

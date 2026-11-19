@@ -6,17 +6,17 @@ import {
   signOut,
 } from "./lib/auth.js";
 import { withBusy } from "./lib/marketplaceUi.js";
+import { revealAdminSession } from "./lib/sessionChrome.js";
 
 const profile = await requireSuperAdmin();
 if (!profile) throw new Error("Super admin required.");
 
 const status = document.querySelector("[data-admin-status]");
-const emailEl = document.querySelector("[data-admin-email]");
 const host = document.querySelector("[data-approve-table]");
 const filterEl = document.querySelector("[data-approve-filter]");
 const searchEl = document.querySelector("[data-approve-search]");
 
-if (emailEl) emailEl.textContent = profile.email || profile.user.email || "";
+revealAdminSession(profile);
 
 let rows = [];
 let lastNote = null;

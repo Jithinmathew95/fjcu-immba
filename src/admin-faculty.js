@@ -1,4 +1,5 @@
 import { requireStaff, signOut } from "./lib/auth.js";
+import { revealAdminSession } from "./lib/sessionChrome.js";
 import {
   deleteFaculty,
   fetchFaculty,
@@ -14,12 +15,11 @@ const profile = await requireStaff();
 if (!profile) throw new Error("Staff sign-in required.");
 
 const status = document.querySelector("[data-admin-status]");
-const emailEl = document.querySelector("[data-admin-email]");
 const form = document.querySelector("[data-faculty-form]");
 const listHost = document.querySelector("[data-faculty-table]");
 const migrateBtn = document.querySelector("[data-migrate-photos]");
 
-if (emailEl) emailEl.textContent = profile.email || profile.user.email || "";
+revealAdminSession(profile);
 
 let people = [];
 let editingId = "";

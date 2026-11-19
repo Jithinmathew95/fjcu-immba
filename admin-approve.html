@@ -17,16 +17,22 @@
         <p class="kicker" style="color:var(--gold)">Back-office · Approve</p>
         <h1 data-en>Approve administrators</h1>
         <h1 data-zh>核准管理員</h1>
-        <p class="lede">
-          <a class="link-internal" href="admin.html">Admin home</a>
-          ·
-          <span data-en>Signed in as</span>
-          <strong data-admin-email></strong>
+        <p class="lede"><a class="link-internal" href="admin.html">Admin home</a></p>
+        <p class="lede" data-admin-checking>
+          <span data-en>Checking sign-in…</span>
+          <span data-zh>正在確認登入…</span>
+        </p>
+        <div class="lede admin-session-known hidden" data-admin-session hidden>
+          <p class="admin-session-who">
+            <span data-en>Signed in as</span>
+            <span data-zh>登入身分</span>
+            <strong data-admin-email></strong>
+          </p>
           <button type="button" class="btn btn-line" data-logout>
             <span data-en>Sign out</span>
             <span data-zh>登出</span>
           </button>
-        </p>
+        </div>
         <p class="status hidden" data-admin-status hidden></p>
       </div>
     </header>

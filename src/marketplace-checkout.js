@@ -9,7 +9,7 @@ import {
   placeOrder,
   statusLabel,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, markBusy, markIdle, marketToolbar, productCellHtml, publicOrderCode, sellerNameHtml, setStatus, showActionFeedback } from "./lib/marketplaceUi.js";
+import { markBusy, markIdle, paintMarketToolbar, productCellHtml, publicOrderCode, sellerNameHtml, setStatus, showActionFeedback } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const panel = document.querySelector("[data-checkout]");
@@ -18,8 +18,7 @@ const placedId = new URLSearchParams(window.location.search).get("order");
 
 const profile = await requireBuyer("marketplace-checkout.html");
 if (!profile) throw new Error("Sign in required");
-if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace-checkout.html");
-bindMarketLogout();
+paintMarketToolbar(toolbar, profile, "marketplace-checkout.html");
 
 let placing = false;
 

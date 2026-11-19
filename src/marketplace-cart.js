@@ -7,7 +7,7 @@ import {
   money,
   setCartQuantity,
 } from "./lib/marketplaceApi.js";
-import { bindMarketLogout, marketToolbar, setStatus, withBusy } from "./lib/marketplaceUi.js";
+import { paintMarketToolbar, setStatus, withBusy } from "./lib/marketplaceUi.js";
 
 const toolbar = document.querySelector("[data-market-chrome]");
 const list = document.querySelector("[data-cart]");
@@ -16,8 +16,7 @@ const status = document.querySelector("[data-market-status]");
 const profile = await requireBuyer("marketplace-cart.html");
 if (!profile) throw new Error("Sign in required");
 
-if (toolbar) toolbar.innerHTML = marketToolbar(profile, "marketplace-cart.html");
-bindMarketLogout();
+paintMarketToolbar(toolbar, profile, "marketplace-cart.html");
 
 let lastNote = null;
 

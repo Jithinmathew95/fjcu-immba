@@ -1,7 +1,7 @@
 import { getProfile, isStaffRole, signOut } from "./lib/auth.js";
+import { revealAdminSession } from "./lib/sessionChrome.js";
 
 const status = document.querySelector("[data-admin-status]");
-const emailEl = document.querySelector("[data-admin-email]");
 const roleEl = document.querySelector("[data-admin-role]");
 const staffLinks = document.querySelector("[data-staff-links]");
 const pendingBox = document.querySelector("[data-pending-box]");
@@ -31,7 +31,7 @@ try {
   if (!profile?.user) {
     window.location.replace("admin-login.html");
   } else {
-    if (emailEl) emailEl.textContent = profile.email || profile.user.email || "";
+    revealAdminSession(profile);
     const staff = isStaffRole(profile.role);
     const roleWrap = document.querySelector("[data-admin-role-wrap]");
     if (roleEl) roleEl.textContent = staff ? profile.role : "";
@@ -47,5 +47,8 @@ try {
     }
   }
 } catch (err) {
+  document.querySelector("[data-admin-checking]")?.classList.add("hidden");
+  const checking = document.querySelector("[data-admin-checking]");
+  if (checking) checking.hidden = true;
   setStatus(err.message || "Could not load this account.", "error");
 }
